@@ -10,15 +10,10 @@ public class TestScripts : MonoBehaviour
 
     Lobby joinedLobby;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     private async Task DeleteThisLobby()
     {
-        await TryCatchAsync(AsyncTask_DeleteLobby());
+        if (joinedLobby != null)
+            await TryCatchAsync(AsyncTask_DeleteLobby());
     }
 
     private async Task AsyncTask_DeleteLobby()
