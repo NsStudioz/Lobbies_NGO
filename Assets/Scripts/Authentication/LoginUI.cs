@@ -13,14 +13,35 @@ public class LoginUI : MonoBehaviour
 
     [SerializeField] private Button loginButton;
 
+    private void Awake()
+    {
+        ShowLoginPanelUI();
+    }
+
     private void OnEnable()
     {
-        
+        loginButton.onClick.AddListener(() =>
+        {
+            OnLoginClicked?.Invoke();
+            ShowMainMenuUI();
+        });
+    }
+
+    private void ShowLoginPanelUI()
+    {
+        loginPanel.SetActive(true);
+        menuPanel.SetActive(false);
+    }
+
+    private void ShowMainMenuUI()
+    {
+        loginPanel.SetActive(false);
+        menuPanel.SetActive(true);
     }
 
     private void OnDisable()
     {
-        
+        loginButton.onClick.RemoveAllListeners();
     }
 
 
