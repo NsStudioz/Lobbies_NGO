@@ -1,18 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LoginUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static event Action OnLoginClicked;
+
+    [SerializeField] private GameObject loginPanel;
+    [SerializeField] private GameObject menuPanel;
+
+    [SerializeField] private Button loginButton;
+
+    private void OnEnable()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
         
     }
+
+
+
 }
