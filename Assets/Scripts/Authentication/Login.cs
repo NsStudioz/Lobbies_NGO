@@ -12,6 +12,8 @@ public class Login : MonoBehaviour
 
     public static event Action OnLoginSuccess;
 
+    private string PLAYER_NAME;
+
     private void Start()
     {
         LoginUI.OnLoginClicked += LoginUI_OnLoginClicked;
@@ -77,6 +79,7 @@ public class Login : MonoBehaviour
 #endif
 
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            await SetPlayerNameForGuest();
             //
             Debug.Log("Sign in anonymously succeeded!");
             Debug.Log($"PlayerID: {AuthenticationService.Instance.PlayerId}"); // get the playerID
@@ -89,5 +92,12 @@ public class Login : MonoBehaviour
         {
             Debug.LogException(ex);
         }
+    }
+
+    // Testing function only:
+    private async Task SetPlayerNameForGuest()
+    {
+        PLAYER_NAME = "Player" + UnityEngine.Random.Range(0, 9999);
+        await AuthenticationService.Instance.UpdatePlayerNameAsync(PLAYER_NAME);
     }
 }
