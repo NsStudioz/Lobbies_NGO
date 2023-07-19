@@ -12,7 +12,12 @@ public class Login : MonoBehaviour
 
     public static event Action OnLoginSuccess;
 
-    private string PLAYER_NAME;
+    private string PLAYER_NAME = "Player";
+
+    private async void Awake()
+    {
+        await Login_TryCatchAsync(UnityServices.InitializeAsync());
+    }
 
     private void Start()
     {
@@ -31,7 +36,6 @@ public class Login : MonoBehaviour
 
     private async Task AuthenticateAsync()
     {
-        await Login_TryCatchAsync(UnityServices.InitializeAsync());
         SetupEvents();
         await SignInAnonymouslyAsync();
     }
@@ -83,6 +87,7 @@ public class Login : MonoBehaviour
             //
             Debug.Log("Sign in anonymously succeeded!");
             Debug.Log($"PlayerID: {AuthenticationService.Instance.PlayerId}"); // get the playerID
+            Debug.Log(await AuthenticationService.Instance.GetPlayerNameAsync());
         }
         catch (AuthenticationException ex) // Authentication Error Codes
         {
@@ -97,7 +102,6 @@ public class Login : MonoBehaviour
     // Testing function only:
     private async Task SetPlayerNameForGuest()
     {
-        PLAYER_NAME = "Player" + UnityEngine.Random.Range(0, 9999);
         await AuthenticationService.Instance.UpdatePlayerNameAsync(PLAYER_NAME);
     }
 }
