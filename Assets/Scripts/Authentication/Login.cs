@@ -31,6 +31,7 @@ public class Login : MonoBehaviour
     {
         await Login_TryCatchAsync(UnityServices.InitializeAsync());
         SetupEvents();
+        await SignInAnonymouslyAsync();
     }
 
     private async Task Login_TryCatchAsync(Task promise)
@@ -61,7 +62,7 @@ public class Login : MonoBehaviour
         };
     }
 
-/*    private async Task SignInAnonymouslyAsync()
+    private async Task SignInAnonymouslyAsync()
     {
         try
         {
@@ -88,7 +89,5 @@ public class Login : MonoBehaviour
         {
             Debug.LogException(ex);
         }
-    }*/
-
-
+    }
 }
