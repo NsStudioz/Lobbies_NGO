@@ -52,6 +52,7 @@ public class Login : MonoBehaviour
         AuthenticationService.Instance.SignedIn += () => {
             Debug.Log($"PlayerID: {AuthenticationService.Instance.PlayerId}"); // get a playerID
             Debug.Log($"Access Token: {AuthenticationService.Instance.AccessToken}"); // get an access token
+            OnLoginSuccess?.Invoke();
         };
 
         AuthenticationService.Instance.SignInFailed += (err) => {

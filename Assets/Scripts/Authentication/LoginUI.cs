@@ -20,11 +20,18 @@ public class LoginUI : MonoBehaviour
 
     private void OnEnable()
     {
+        Login.OnLoginSuccess += ShowMainMenuUI;
+
         loginButton.onClick.AddListener(() =>
         {
             OnLoginClicked?.Invoke();
-            ShowMainMenuUI();
         });
+    }
+
+    private void OnDisable()
+    {
+        loginButton.onClick.RemoveAllListeners();
+        Login.OnLoginSuccess -= ShowMainMenuUI;
     }
 
     private void ShowLoginPanelUI()
@@ -39,10 +46,7 @@ public class LoginUI : MonoBehaviour
         menuPanel.SetActive(true);
     }
 
-    private void OnDisable()
-    {
-        loginButton.onClick.RemoveAllListeners();
-    }
+
 
 
 
