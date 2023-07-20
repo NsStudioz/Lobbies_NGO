@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using TMPro;
+using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,22 +18,24 @@ public class MainMenuUI : MonoBehaviour
     [SerializeField] private Button joinLobbyButton;
     [SerializeField] private Button optionsButton;
 
+    [SerializeField] private TMP_Text playerNameText;
+    [SerializeField] private string PLAYER_NAME;
+
     // TO-DO:
     // Options button, options panel & Show Options menu
 
-    private void Start()
-    {
-        ShowMainMenuPanel();
-    }
-
     private void OnEnable()
     {
+        Login.OnLoginSuccess += ShowPlayerNameAsync;
+        //
         createLobbyButton.onClick.AddListener(ShowCreateLobbyPanel);
         joinLobbyButton.onClick.AddListener(ShowJoinLobbyPanel);
     }
 
     private void OnDisable()
     {
+        Login.OnLoginSuccess -= ShowPlayerNameAsync;
+        //
         createLobbyButton.onClick.RemoveAllListeners();
         joinLobbyButton.onClick.RemoveAllListeners();
         optionsButton.onClick.RemoveAllListeners();
@@ -57,5 +62,10 @@ public class MainMenuUI : MonoBehaviour
         menuPanel.SetActive(false);
     }
 
+    private async void ShowPlayerNameAsync()
+    {
+        PLAYER_NAME = await AuthenticationService.Instance.GetPlayerNameAsync();
+        playerNameText.text = PLAYER_NAME;
+    }
 
 }

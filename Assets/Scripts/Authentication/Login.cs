@@ -12,7 +12,7 @@ public class Login : MonoBehaviour
 
     public static event Action OnLoginSuccess;
 
-    private string PLAYER_NAME = "Player";
+    [SerializeField] private string PLAYER_NAME_PREFIX = "Player";
 
     private async void Awake()
     {
@@ -88,7 +88,7 @@ public class Login : MonoBehaviour
             //
             Debug.Log("Sign in anonymously succeeded!");
             Debug.Log($"PlayerID: {AuthenticationService.Instance.PlayerId}"); // get the playerID
-            Debug.Log(await AuthenticationService.Instance.GetPlayerNameAsync());
+            //Debug.Log(await AuthenticationService.Instance.GetPlayerNameAsync());
         }
         catch (AuthenticationException ex) // Authentication Error Codes
         {
@@ -103,6 +103,6 @@ public class Login : MonoBehaviour
     // Testing function only:
     private async Task SetPlayerNameForGuest()
     {
-        await AuthenticationService.Instance.UpdatePlayerNameAsync(PLAYER_NAME);
+        await AuthenticationService.Instance.UpdatePlayerNameAsync(PLAYER_NAME_PREFIX);
     }
 }
