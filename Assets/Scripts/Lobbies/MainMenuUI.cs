@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
+    public static event Action OnCreateLobbyButtonClicked;
+    public static event Action OnJoinLobbyButtonClicked;
 
     [SerializeField] private GameObject createLobbyPanel;
     [SerializeField] private GameObject joinLobbyPanel;
@@ -28,8 +30,27 @@ public class MainMenuUI : MonoBehaviour
     {
         Login.OnLoginSuccess += ShowPlayerNameAsync;
         //
-        createLobbyButton.onClick.AddListener(ShowCreateLobbyPanel);
-        joinLobbyButton.onClick.AddListener(ShowJoinLobbyPanel);
+        createLobbyButton.onClick.AddListener(() =>
+        {
+            ShowCreateLobbyPanel();
+            Event_OnCreateLobbyButtonClicked();
+        });
+
+        joinLobbyButton.onClick.AddListener(() =>
+        {
+            ShowJoinLobbyPanel();
+            Event_OnJoinLobbyButtonClicked();
+        });
+    }
+
+    private static void Event_OnJoinLobbyButtonClicked()
+    {
+        OnJoinLobbyButtonClicked?.Invoke();
+    }
+
+    private static void Event_OnCreateLobbyButtonClicked()
+    {
+        OnCreateLobbyButtonClicked?.Invoke();
     }
 
     private void OnDisable()
