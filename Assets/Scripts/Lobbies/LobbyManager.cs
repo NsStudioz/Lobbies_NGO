@@ -13,6 +13,7 @@ public class LobbyManager : MonoBehaviour
 
     public string KEY_PLAYER_NAME { get; private set; }
     private string playerName;
+    private float heartbeatTimer;
 
     #region Helpers
 
@@ -98,5 +99,25 @@ public class LobbyManager : MonoBehaviour
 
     #endregion
 
+    void Update()
+    {
+        HandleLobbyHeartbeat(Time.deltaTime);
+        //HandleLobbyPolling(Time.deltaTime);
+    }
+
+    private void HandleLobbyHeartbeat(float deltaTime)
+    {
+        if (IsLobbyHost())
+        {
+            heartbeatTimer -= deltaTime;
+            if (heartbeatTimer <= 0f)
+            {
+                float heartbeatTimerMax = 15f;
+                heartbeatTimer = heartbeatTimerMax;
+
+                LobbyService.Instance.SendHeartbeatPingAsync(currentLobby.Id);
+            }
+        }
+    }
 
 }
