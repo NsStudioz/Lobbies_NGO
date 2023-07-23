@@ -14,6 +14,7 @@ public class LobbyManager : MonoBehaviour
     public string KEY_PLAYER_NAME { get; private set; }
     private string playerName;
     private float heartbeatTimer;
+    private readonly int MAX_PLAYERS = 4;
 
     #region Helpers
 
@@ -99,7 +100,7 @@ public class LobbyManager : MonoBehaviour
 
     #endregion
 
-    void Update()
+    private void Update()
     {
         HandleLobbyHeartbeat(Time.deltaTime);
         //HandleLobbyPolling(Time.deltaTime);
@@ -118,6 +119,35 @@ public class LobbyManager : MonoBehaviour
                 LobbyService.Instance.SendHeartbeatPingAsync(currentLobby.Id);
             }
         }
+    }
+
+
+    private async Task<bool> CreateNewLobby()
+    {
+        bool succedded = await TryCatchAsyncBool(NewLobby());
+        return succedded;
+    }
+
+    private async Task NewLobby()
+    {
+        if (currentLobby == null)
+            return;
+
+        string lobbyName = "New Lobby";
+        Player player = await GetPlayer();
+
+        CreateLobbyOptions options = new CreateLobbyOptions
+        {
+            Player = player,
+            IsPrivate = true,
+        };
+
+        Lobby lobbyInstance = await LobbyService.Instance.CreateLobbyAsync(lobbyName, MAX_PLAYERS ,options);
+
+        currentLobby = lobbyInstance;
+
+        //Debug.Log("Created Lobby " + lobby.Name + "  | Lobby's privacy state: " + lobby.IsPrivate + " | Lobby Code: " + lobby.LobbyCode);
+        Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
     }
 
 }
