@@ -100,6 +100,16 @@ public class LobbyManager : MonoBehaviour
 
     #endregion
 
+    private void Start()
+    {
+        MainMenuUI.OnCreateLobbyButtonClicked += CreateNewLobby;
+    }
+
+    private void OnDisable()
+    {
+        
+    }
+
     private void Update()
     {
         HandleLobbyHeartbeat(Time.deltaTime);
@@ -122,10 +132,9 @@ public class LobbyManager : MonoBehaviour
     }
 
 
-    private async Task<bool> CreateNewLobby()
+    private async void CreateNewLobby()
     {
-        bool succedded = await TryCatchAsyncBool(NewLobby());
-        return succedded;
+         await TryCatchAsyncBool(NewLobby());
     }
 
     private async Task NewLobby()
