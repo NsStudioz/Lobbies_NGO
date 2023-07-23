@@ -107,7 +107,7 @@ public class LobbyManager : MonoBehaviour
 
     private void OnDisable()
     {
-        
+        MainMenuUI.OnCreateLobbyButtonClicked -= CreateNewLobby;
     }
 
     private void Update()
