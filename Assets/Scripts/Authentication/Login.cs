@@ -104,5 +104,6 @@ public class Login : MonoBehaviour
     private async Task SetPlayerNameForGuest()
     {
         await AuthenticationService.Instance.UpdatePlayerNameAsync(PLAYER_NAME_PREFIX);
+        Debug.Log(PLAYER_NAME_PREFIX);
     }
 }
