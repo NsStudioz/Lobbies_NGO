@@ -26,9 +26,10 @@ public class MainMenuUI : MonoBehaviour
     // TO-DO:
     // Options button, options panel & Show Options menu
 
-    private void Start()
+    private void OnEnable()
     {
         Login.OnLoginSuccess += ShowPlayerNameAsync;
+        LobbyEvents.OnLeaveLobby += ShowMainMenuPanel;
         //
         createLobbyButton.onClick.AddListener(() =>
         {
@@ -56,6 +57,7 @@ public class MainMenuUI : MonoBehaviour
     private void OnDisable()
     {
         Login.OnLoginSuccess -= ShowPlayerNameAsync;
+        LobbyEvents.OnLeaveLobby -= ShowMainMenuPanel;
         //
         createLobbyButton.onClick.RemoveAllListeners();
         joinLobbyButton.onClick.RemoveAllListeners();
@@ -87,6 +89,7 @@ public class MainMenuUI : MonoBehaviour
     {
         PLAYER_NAME = await AuthenticationService.Instance.GetPlayerNameAsync();
         playerNameText.text = PLAYER_NAME;
+        Debug.Log("PlayerTextName: " + AuthenticationService.Instance.PlayerName);
     }
 
 }
