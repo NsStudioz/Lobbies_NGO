@@ -26,7 +26,7 @@ public class MainMenuUI : MonoBehaviour
     // TO-DO:
     // Options button, options panel & Show Options menu
 
-    private void OnEnable()
+    private void Start()
     {
         Login.OnLoginSuccess += ShowPlayerNameAsync;
         //
@@ -43,12 +43,12 @@ public class MainMenuUI : MonoBehaviour
         });
     }
 
-    private static void Event_OnJoinLobbyButtonClicked()
+    private void Event_OnJoinLobbyButtonClicked()
     {
         OnJoinLobbyButtonClicked?.Invoke();
     }
 
-    private static void Event_OnCreateLobbyButtonClicked()
+    private void Event_OnCreateLobbyButtonClicked()
     {
         OnCreateLobbyButtonClicked?.Invoke();
     }
