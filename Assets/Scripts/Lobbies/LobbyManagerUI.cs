@@ -9,7 +9,7 @@ public class LobbyManagerUI : MonoBehaviour
 
     [SerializeField] private Button LeaveLobbyBtn;
 
-    private void OnEnable()
+    private void Start()
     {
         LeaveLobbyBtn.onClick.AddListener(LeaveLobby);
     }

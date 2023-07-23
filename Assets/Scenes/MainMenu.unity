@@ -217,7 +217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &27725032
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3692,6 +3692,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 764710207}
+  - component: {fileID: 764710208}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -3707,13 +3708,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 764710206}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1089.3047, y: 490.32605, z: -13.330231}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &764710208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764710206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a5b8828e9c999408aa580ea4bc29c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &768713106
 GameObject:
   m_ObjectHideFlags: 0
@@ -4638,8 +4651,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24bd494c12b4897499b08d003053d252, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createLobbyPanel: {fileID: 170290157}
-  joinLobbyPanel: {fileID: 1261305197}
+  createLobbyPanel: {fileID: 1314085120}
+  joinLobbyPanel: {fileID: 996408036}
   menuPanel: {fileID: 862613939}
   createLobbyButton: {fileID: 170290159}
   joinLobbyButton: {fileID: 1261305199}
@@ -4658,6 +4671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf33dc084172b9d4e9fe4e83cfd69376, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LeaveLobbyBtn: {fileID: 451147566}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -6807,7 +6821,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1314085121
 RectTransform:
   m_ObjectHideFlags: 0
