@@ -12,7 +12,7 @@ public class LobbyManager : MonoBehaviour
 
     [SerializeField] private Lobby currentLobby;
 
-    public string KEY_PLAYER_NAME { get; private set; }
+    private string KEY_PLAYER_NAME = "PlayerName";
     private string playerName = "";
     private float heartbeatTimer;
     private readonly int MAX_PLAYERS = 4;
@@ -52,6 +52,7 @@ public class LobbyManager : MonoBehaviour
     private async Task<string> GetPlayerName()
     {
         playerName = await AuthenticationService.Instance.GetPlayerNameAsync();
+        Debug.Log("PlayerName in lobby: " + playerName);
         return playerName;
     }
 
