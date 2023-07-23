@@ -11,9 +11,50 @@ public class LobbyManager : MonoBehaviour
 
     Lobby currentLobby;
 
-    public bool IsLobbyHost()
+    public string KEY_PLAYER_NAME { get; private set; }
+    private string playerName;
+
+    #region Helpers
+
+    private bool IsLobbyHost()
     {
         return currentLobby != null && currentLobby.HostId == AuthenticationService.Instance.PlayerId;
+    }
+
+    private bool IsPlayerInLobby()
+    {
+        if (currentLobby != null && currentLobby.Players != null)
+        {
+            foreach (Player player in currentLobby.Players)
+            {
+                if (player.Id == AuthenticationService.Instance.PlayerId)
+                {
+                    // This player is in this lobby
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // May lead to potential exception:
+    private async Task<Player> GetPlayer()
+    {
+        return new Player(AuthenticationService.Instance.PlayerId, null, new Dictionary<string, PlayerDataObject> {
+            { KEY_PLAYER_NAME, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, await GetPlayerName()) }
+        });
+    }
+
+    // May lead to potential exception:
+    private async Task<string> GetPlayerName()
+    {
+        playerName = await AuthenticationService.Instance.GetPlayerNameAsync();
+        return playerName;
+    }
+
+    public Lobby GetCurrentLobby()
+    {
+        return currentLobby;
     }
 
 
@@ -32,7 +73,7 @@ public class LobbyManager : MonoBehaviour
         return true;
     }
 
-    public async Task<bool> CurrentLobby_TryCatchAsyncBool(Task promise)
+    private async Task<bool> CurrentLobby_TryCatchAsyncBool(Task promise)
     {
         if (currentLobby != null)
         {
@@ -54,5 +95,8 @@ public class LobbyManager : MonoBehaviour
         }
 
     }
+
+    #endregion
+
 
 }
