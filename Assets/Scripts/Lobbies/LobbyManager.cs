@@ -159,4 +159,20 @@ public class LobbyManager : MonoBehaviour
         Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
     }
 
+    private async Task<bool> DeleteCurrentLobby()
+    {
+        bool succeded = await CurrentLobby_TryCatchAsyncBool(DeleteLobby());
+    }
+
+    private async Task DeleteLobby()
+    {
+        await LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
+    }
+
+    private async void OnApplicationQuit()
+    {
+        if (IsLobbyHost())
+            await DeleteCurrentLobby();
+    }
+
 }
