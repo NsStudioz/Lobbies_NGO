@@ -95,7 +95,6 @@ public class LobbyManager : MonoBehaviour
         {
             return false;
         }
-
     }
 
     #endregion
@@ -159,14 +158,36 @@ public class LobbyManager : MonoBehaviour
         Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
     }
 
+
+    private async void LeaveCurrentLobby()
+    {
+        await CurrentLobby_TryCatchAsyncBool(LeaveLobby());
+    }
+
+    private async Task LeaveLobby()
+    {
+        if (currentLobby.MaxPlayers > 0)
+        {
+            await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
+
+            currentLobby = null;
+        }
+
+        else if (currentLobby.MaxPlayers <= 0)
+            await DeleteCurrentLobby();
+    }
+
     private async Task<bool> DeleteCurrentLobby()
     {
         bool succeded = await CurrentLobby_TryCatchAsyncBool(DeleteLobby());
+        return succeded;
     }
 
     private async Task DeleteLobby()
     {
         await LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
+
+        currentLobby = null;
     }
 
     private async void OnApplicationQuit()
