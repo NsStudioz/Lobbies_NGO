@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,10 +10,10 @@ using UnityEngine;
 public class LobbyManager : MonoBehaviour
 {
 
-    Lobby currentLobby;
+    [SerializeField] private Lobby currentLobby;
 
     public string KEY_PLAYER_NAME { get; private set; }
-    private string playerName;
+    private string playerName = "";
     private float heartbeatTimer;
     private readonly int MAX_PLAYERS = 4;
 
@@ -99,7 +100,7 @@ public class LobbyManager : MonoBehaviour
 
     #endregion
 
-    private void Start()
+    private void OnEnable()
     {
         MainMenuUI.OnCreateLobbyButtonClicked += CreateNewLobby;
         LobbyEvents.OnLeaveLobby += LeaveCurrentLobby;
@@ -135,14 +136,38 @@ public class LobbyManager : MonoBehaviour
 
     private async void CreateNewLobby()
     {
-         await TryCatchAsyncBool(NewLobby());
+        await TryCatchAsyncBool(NewLobby());
+        Debug.Log(currentLobby);
     }
+
+/*    private async void CreateLobbyTest()
+    {
+        try
+        {
+            string lobbyName = "New Lobby"; // lobby name
+            Player player = await GetPlayer(); // Get a new player data
+
+            CreateLobbyOptions options = new CreateLobbyOptions
+            {
+                Player = player,        // set the new player
+                IsPrivate = true, // set lobby to private
+            };
+
+            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, MAX_PLAYERS, options);
+
+            currentLobby = lobby;
+
+            //Debug.Log("Created Lobby " + lobby.Name + "  | Lobby's privacy state: " + lobby.IsPrivate + " | Lobby Code: " + lobby.LobbyCode);
+            Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }*/
 
     private async Task NewLobby()
     {
-        if (currentLobby == null)
-            return;
-
         string lobbyName = "New Lobby";
         Player player = await GetPlayer();
 
@@ -157,13 +182,15 @@ public class LobbyManager : MonoBehaviour
         currentLobby = lobbyInstance;
 
         //Debug.Log("Created Lobby " + lobby.Name + "  | Lobby's privacy state: " + lobby.IsPrivate + " | Lobby Code: " + lobby.LobbyCode);
-        Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
+        //Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
     }
 
 
     private async void LeaveCurrentLobby()
     {
         await CurrentLobby_TryCatchAsyncBool(LeaveLobby());
+
+        Debug.Log("Left Lobby");
     }
 
     private async Task LeaveLobby()
