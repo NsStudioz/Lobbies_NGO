@@ -102,11 +102,13 @@ public class LobbyManager : MonoBehaviour
     private void Start()
     {
         MainMenuUI.OnCreateLobbyButtonClicked += CreateNewLobby;
+        LobbyEvents.OnLeaveLobby += LeaveCurrentLobby;
     }
 
     private void OnDisable()
     {
         MainMenuUI.OnCreateLobbyButtonClicked -= CreateNewLobby;
+        LobbyEvents.OnLeaveLobby -= LeaveCurrentLobby;
     }
 
     private void Update()
