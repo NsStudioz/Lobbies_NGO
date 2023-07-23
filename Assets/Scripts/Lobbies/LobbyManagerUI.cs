@@ -21,7 +21,7 @@ public class LobbyManagerUI : MonoBehaviour
 
     private void LeaveLobby()
     {
-        // invoke event leave lobby (Host und Client)
+        LobbyEvents.OnLeaveLobby?.Invoke();
     }
 
 
