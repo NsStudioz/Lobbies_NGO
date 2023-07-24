@@ -52,7 +52,7 @@ public class LobbyManager : MonoBehaviour
     private async Task<string> GetPlayerName()
     {
         playerName = await AuthenticationService.Instance.GetPlayerNameAsync();
-        Debug.Log("PlayerName in lobby: " + playerName);
+        //Debug.Log("PlayerName in lobby: " + playerName);
         return playerName;
     }
 
@@ -141,32 +141,6 @@ public class LobbyManager : MonoBehaviour
         Debug.Log(currentLobby);
     }
 
-/*    private async void CreateLobbyTest()
-    {
-        try
-        {
-            string lobbyName = "New Lobby"; // lobby name
-            Player player = await GetPlayer(); // Get a new player data
-
-            CreateLobbyOptions options = new CreateLobbyOptions
-            {
-                Player = player,        // set the new player
-                IsPrivate = true, // set lobby to private
-            };
-
-            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, MAX_PLAYERS, options);
-
-            currentLobby = lobby;
-
-            //Debug.Log("Created Lobby " + lobby.Name + "  | Lobby's privacy state: " + lobby.IsPrivate + " | Lobby Code: " + lobby.LobbyCode);
-            Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
-        }
-        catch (LobbyServiceException e)
-        {
-            Debug.Log(e);
-        }
-    }*/
-
     private async Task NewLobby()
     {
         string lobbyName = "New Lobby";
@@ -220,6 +194,7 @@ public class LobbyManager : MonoBehaviour
         currentLobby = null;
     }
 
+    // need to check if this is a valid async approach (using void)
     private async void OnApplicationQuit()
     {
         if (IsLobbyHost())
