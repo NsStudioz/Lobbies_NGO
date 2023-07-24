@@ -17,6 +17,9 @@ public class LobbyManager : MonoBehaviour
     private float heartbeatTimer;
     private readonly int MAX_PLAYERS = 4;
 
+    //private Coroutine _heartbeatCoroutine;
+    private Coroutine refreshLobbyCoroutine;
+
     #region Helpers
 
     private bool IsLobbyHost()
@@ -116,7 +119,6 @@ public class LobbyManager : MonoBehaviour
     private void Update()
     {
         HandleLobbyHeartbeat(Time.deltaTime);
-        //HandleLobbyPolling(Time.deltaTime);
     }
 
     private void HandleLobbyHeartbeat(float deltaTime)
@@ -133,6 +135,25 @@ public class LobbyManager : MonoBehaviour
             }
         }
     }
+
+    private IEnumerator RefreshLobbyCoroutine(string lobbyId ,float waitTimeSeconds) // update lobby data (Player count, game mode, etc...)
+    {
+        while (true && currentLobby != null)
+        {
+            Task<Lobby> task = LobbyService.Instance.GetLobbyAsync(lobbyId);
+            yield return new WaitUntil(() => task.IsCompleted);
+
+            Lobby newLobby = task.Result;
+            if(newLobby.LastUpdated > currentLobby.LastUpdated)
+            {
+                currentLobby = newLobby;
+                // send event for updates
+            }
+
+            yield return new WaitForSecondsRealtime(waitTimeSeconds);
+        }
+    }
+
 
 
     private async void CreateNewLobby()
@@ -155,6 +176,9 @@ public class LobbyManager : MonoBehaviour
         Lobby lobbyInstance = await LobbyService.Instance.CreateLobbyAsync(lobbyName, MAX_PLAYERS ,options);
 
         currentLobby = lobbyInstance;
+
+        /*    _heartbeatCoroutine = StartCoroutine(HeartbeatLobbyCoroutine(_lobby.Id, waitTimeSeconds:6f));   */
+        refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 1f));
 
         //Debug.Log("Created Lobby " + lobby.Name + "  | Lobby's privacy state: " + lobby.IsPrivate + " | Lobby Code: " + lobby.LobbyCode);
         //Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
