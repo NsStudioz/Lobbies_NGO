@@ -17,8 +17,8 @@ public class LobbyManager : MonoBehaviour
     private float heartbeatTimer;
     private readonly int MAX_PLAYERS = 4;
 
-    private Coroutine heartbeatCoroutine;
-    private Coroutine refreshLobbyCoroutine;
+    private Coroutine heartbeatCoroutine = null;
+    private Coroutine refreshLobbyCoroutine = null;
 
     #region Helpers
 
@@ -118,7 +118,7 @@ public class LobbyManager : MonoBehaviour
 
     private IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
     {
-        while(true && currentLobby != null)
+        while(currentLobby != null)
         {
             Debug.Log(message: "Heartbeat");
             LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
@@ -128,7 +128,7 @@ public class LobbyManager : MonoBehaviour
 
     private IEnumerator RefreshLobbyCoroutine(string lobbyId ,float waitTimeSeconds) // update lobby data (Player count, game mode, etc...)
     {
-        while (true && currentLobby != null)
+        while (currentLobby != null)
         {
             Task<Lobby> task = LobbyService.Instance.GetLobbyAsync(lobbyId);
             yield return new WaitUntil(() => task.IsCompleted);
@@ -168,7 +168,7 @@ public class LobbyManager : MonoBehaviour
         currentLobby = lobbyInstance;
 
         heartbeatCoroutine = StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 10f));
-        refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 1f));
+        refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 1.1f));
 
         //Debug.Log("Created Lobby " + lobby.Name + "  | Lobby's privacy state: " + lobby.IsPrivate + " | Lobby Code: " + lobby.LobbyCode);
         //Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
@@ -192,7 +192,10 @@ public class LobbyManager : MonoBehaviour
         }
 
         else if (currentLobby.MaxPlayers <= 0)
+        {
+            StopLobbyCoroutines();
             await DeleteCurrentLobby();
+        }
     }
 
     private async Task<bool> DeleteCurrentLobby()
@@ -206,6 +209,13 @@ public class LobbyManager : MonoBehaviour
         await LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
 
         currentLobby = null;
+    }
+
+    private void StopLobbyCoroutines()
+    {
+        StopAllCoroutines();
+        heartbeatCoroutine = null;
+        refreshLobbyCoroutine = null;
     }
 
     // need to check if this is a valid async approach (using void)
