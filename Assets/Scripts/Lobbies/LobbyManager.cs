@@ -118,7 +118,7 @@ public class LobbyManager : MonoBehaviour
 
     private IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
     {
-        while(currentLobby != null)
+        while (currentLobby != null) // dont use while (true) => this will cause an exception (coroutines continue to work even when lobby is closed due to this)
         {
             Debug.Log(message: "Heartbeat");
             LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
@@ -128,7 +128,7 @@ public class LobbyManager : MonoBehaviour
 
     private IEnumerator RefreshLobbyCoroutine(string lobbyId ,float waitTimeSeconds) // update lobby data (Player count, game mode, etc...)
     {
-        while (currentLobby != null)
+        while (currentLobby != null) // dont use while (true) => this will cause an exception (coroutines continue to work even when lobby is closed due to this)
         {
             Task<Lobby> task = LobbyService.Instance.GetLobbyAsync(lobbyId);
             yield return new WaitUntil(() => task.IsCompleted);
