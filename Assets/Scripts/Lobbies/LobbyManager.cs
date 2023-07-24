@@ -17,7 +17,7 @@ public class LobbyManager : MonoBehaviour
     private float heartbeatTimer;
     private readonly int MAX_PLAYERS = 4;
 
-    //private Coroutine _heartbeatCoroutine;
+    private Coroutine heartbeatCoroutine;
     private Coroutine refreshLobbyCoroutine;
 
     #region Helpers
@@ -116,23 +116,13 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnLeaveLobby -= LeaveCurrentLobby;
     }
 
-    private void Update()
+    private IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
     {
-        HandleLobbyHeartbeat(Time.deltaTime);
-    }
-
-    private void HandleLobbyHeartbeat(float deltaTime)
-    {
-        if (IsLobbyHost())
+        while(true && currentLobby != null)
         {
-            heartbeatTimer -= deltaTime;
-            if (heartbeatTimer <= 0f)
-            {
-                float heartbeatTimerMax = 15f;
-                heartbeatTimer = heartbeatTimerMax;
-
-                LobbyService.Instance.SendHeartbeatPingAsync(currentLobby.Id);
-            }
+            Debug.Log(message: "Heartbeat");
+            LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
+            yield return new WaitForSecondsRealtime(waitTimeSeconds);
         }
     }
 
@@ -177,7 +167,7 @@ public class LobbyManager : MonoBehaviour
 
         currentLobby = lobbyInstance;
 
-        /*    _heartbeatCoroutine = StartCoroutine(HeartbeatLobbyCoroutine(_lobby.Id, waitTimeSeconds:6f));   */
+        heartbeatCoroutine = StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 10f));
         refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 1f));
 
         //Debug.Log("Created Lobby " + lobby.Name + "  | Lobby's privacy state: " + lobby.IsPrivate + " | Lobby Code: " + lobby.LobbyCode);
