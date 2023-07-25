@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class LobbyEvents
 {
+    public delegate void CreateLobby();
+    public static CreateLobby OnCreateLobby;
 
     public delegate void LeaveLobby();
     public static LeaveLobby OnLeaveLobby;
@@ -15,5 +17,8 @@ public class LobbyEvents
     public delegate void LobbyPrivacyStateChange(bool state);
     public static LobbyPrivacyStateChange OnLobbyPrivacyStateChange;
 
-    
+    public delegate void LobbyPrivacyStateUpdated();
+    public static LobbyPrivacyStateUpdated OnLobbyPrivacyStateUpdated;
+
+
 }
