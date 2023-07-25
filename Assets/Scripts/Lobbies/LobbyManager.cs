@@ -191,7 +191,7 @@ public class LobbyManager : MonoBehaviour
             Lobby lobbyInstance = await LobbyService.Instance.UpdateLobbyAsync(currentLobby.Id, options);
             currentLobby = lobbyInstance;
 
-            LobbyEvents.OnLobbyPrivacyStateUpdated?.Invoke();
+            LobbyEvents.OnLobbyPrivacyStateUpdated?.Invoke(currentLobby.IsPrivate);
             Debug.Log("Is Lobby Private?: " + currentLobby.IsPrivate);
         }
     }
