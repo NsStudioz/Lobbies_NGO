@@ -34,7 +34,6 @@ public class LobbyManagerUI : MonoBehaviour
     private void UpdateTotalPlayersInLobbyText(Lobby currentLobby)
     {
         LobbyPlayerCount.text = currentLobby.Players.Count.ToString() + "/" + currentLobby.MaxPlayers.ToString();
-        //LobbyPlayerCount.text = currentLobby.Players.Count + "/" + currentLobby.MaxPlayers;
     }
 
 
