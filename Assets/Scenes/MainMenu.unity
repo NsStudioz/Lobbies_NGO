@@ -1560,7 +1560,7 @@ GameObject:
   - component: {fileID: 261562648}
   - component: {fileID: 261562647}
   m_Layer: 5
-  m_Name: Privacy_Btn
+  m_Name: LobbyPrivacy_Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4672,6 +4672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LeaveLobbyBtn: {fileID: 451147566}
+  lobbyPrivacyBtn: {fileID: 261562647}
   LobbyPlayerCount: {fileID: 1806872001}
 --- !u!1 &963194225
 GameObject:
