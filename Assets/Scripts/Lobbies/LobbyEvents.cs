@@ -12,4 +12,8 @@ public class LobbyEvents
     public delegate void LobbyUpdated(Lobby currentLobby);
     public static LobbyUpdated OnLobbyUpdated;
 
+    public delegate void LobbyPrivacyStateChange(bool state);
+    public static LobbyPrivacyStateChange OnLobbyPrivacyStateChange;
+
+    
 }
