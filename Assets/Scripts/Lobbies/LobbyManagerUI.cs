@@ -12,16 +12,18 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private Button LeaveLobbyBtn;
 
     [Header("Texts")]
-    [SerializeField] private TMP_Text totalPlayersInLobby;
+    [SerializeField] private TMP_Text LobbyPlayerCount;
 
     private void Start()
     {
         LeaveLobbyBtn.onClick.AddListener(LeaveLobby);
+        LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
     }
 
     private void OnDisable()
     {
         LeaveLobbyBtn.onClick.RemoveAllListeners();
+        LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
     }
 
     private void LeaveLobby()
@@ -31,7 +33,8 @@ public class LobbyManagerUI : MonoBehaviour
 
     private void UpdateTotalPlayersInLobbyText(Lobby currentLobby)
     {
-        totalPlayersInLobby.text = currentLobby.Players.ToString() + "/" + currentLobby.MaxPlayers.ToString();
+        LobbyPlayerCount.text = currentLobby.Players.Count.ToString() + "/" + currentLobby.MaxPlayers.ToString();
+        //LobbyPlayerCount.text = currentLobby.Players.Count + "/" + currentLobby.MaxPlayers;
     }
 
 
