@@ -22,18 +22,27 @@ public class LobbyManagerUI : MonoBehaviour
         LeaveLobbyBtn.onClick.AddListener(LeaveLobby);
         lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
         LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
-    }
+        LobbyEvents.OnCreateLobby += InitializeLobbyPrivacyStateToPrivate;
 
+    }
     private void OnDisable()
     {
         LeaveLobbyBtn.onClick.RemoveAllListeners();
         lobbyPrivacyBtn.onClick.RemoveAllListeners();
         LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
+        LobbyEvents.OnCreateLobby -= InitializeLobbyPrivacyStateToPrivate;
+
     }
 
     private void LeaveLobby()
     {
         LobbyEvents.OnLeaveLobby?.Invoke();
+    }
+
+    private void InitializeLobbyPrivacyStateToPrivate()
+    {
+        if (!isPrivate)
+            isPrivate = true;
     }
 
     private void Event_OnLobbyPrivacyStateChange()
