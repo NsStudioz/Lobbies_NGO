@@ -10,6 +10,7 @@ public class LobbyManagerUI : MonoBehaviour
 {
     [Header("Buttons")]
     [SerializeField] private Button LeaveLobbyBtn;
+    [SerializeField] private Button lobbyPrivacyBtn;
 
     [Header("Texts")]
     [SerializeField] private TMP_Text LobbyPlayerCount;
