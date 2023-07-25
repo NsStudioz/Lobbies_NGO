@@ -14,6 +14,9 @@ public class LobbyManagerUI : MonoBehaviour
 
     [Header("Texts")]
     [SerializeField] private TMP_Text LobbyPlayerCount;
+    [SerializeField] private TMP_Text lobbyPrivacyText;
+    private readonly string publicLobby = "Public";
+    private readonly string privateLobby = "Private";
 
     private bool isPrivate = true;
 
@@ -23,14 +26,17 @@ public class LobbyManagerUI : MonoBehaviour
         lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
         LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnCreateLobby += InitializeLobbyPrivacyStateToPrivate;
+        LobbyEvents.OnLobbyPrivacyStateUpdated += UpdateLobbyPrivacyText;
 
     }
+
     private void OnDisable()
     {
         LeaveLobbyBtn.onClick.RemoveAllListeners();
         lobbyPrivacyBtn.onClick.RemoveAllListeners();
         LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnCreateLobby -= InitializeLobbyPrivacyStateToPrivate;
+        LobbyEvents.OnLobbyPrivacyStateUpdated -= UpdateLobbyPrivacyText;
 
     }
 
@@ -42,13 +48,21 @@ public class LobbyManagerUI : MonoBehaviour
     private void InitializeLobbyPrivacyStateToPrivate()
     {
         if (!isPrivate)
-            isPrivate = true;
+             isPrivate = true;
     }
 
     private void Event_OnLobbyPrivacyStateChange()
     {
         isPrivate = !isPrivate;
         LobbyEvents.OnLobbyPrivacyStateChange?.Invoke(isPrivate);
+    }
+
+    private void UpdateLobbyPrivacyText(bool state)
+    {
+        if (state)
+            lobbyPrivacyText.text = privateLobby;
+        else
+            lobbyPrivacyText.text = publicLobby;
     }
 
     private void UpdateTotalPlayersInLobbyText(Lobby currentLobby)
