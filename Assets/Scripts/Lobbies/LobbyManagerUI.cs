@@ -38,6 +38,7 @@ public class LobbyManagerUI : MonoBehaviour
 
     private void Event_OnLobbyPrivacyStateChange()
     {
+        isPrivate = !isPrivate;
         LobbyEvents.OnLobbyPrivacyStateChange?.Invoke(isPrivate);
     }
 
