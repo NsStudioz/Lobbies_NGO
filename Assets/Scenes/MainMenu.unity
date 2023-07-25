@@ -4672,6 +4672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LeaveLobbyBtn: {fileID: 451147566}
+  LobbyPlayerCount: {fileID: 1806872001}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -8356,7 +8357,7 @@ GameObject:
   - component: {fileID: 1580259979}
   - component: {fileID: 1580259978}
   m_Layer: 5
-  m_Name: MaxPlayers_Text
+  m_Name: LobbyPlayers_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9372,7 +9373,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1/4
+  m_text: 0/4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
