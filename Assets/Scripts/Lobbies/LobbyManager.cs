@@ -136,8 +136,9 @@ public class LobbyManager : MonoBehaviour
             Lobby newLobby = task.Result;
             if(newLobby.LastUpdated > currentLobby.LastUpdated)
             {
+                LobbyEvents.OnLobbyUpdated?.Invoke(newLobby);
                 currentLobby = newLobby;
-                // send event for updates
+                // send event for updates:
             }
 
             yield return new WaitForSecondsRealtime(waitTimeSeconds);
