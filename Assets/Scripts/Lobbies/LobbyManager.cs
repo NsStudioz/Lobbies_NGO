@@ -10,7 +10,7 @@ using UnityEngine;
 public class LobbyManager : MonoBehaviour
 {
 
-    [SerializeField] private Lobby currentLobby;
+    private Lobby currentLobby;
 
     private string KEY_PLAYER_NAME = "PlayerName";
     private string playerName = "";
@@ -136,9 +136,9 @@ public class LobbyManager : MonoBehaviour
             Lobby newLobby = task.Result;
             if(newLobby.LastUpdated > currentLobby.LastUpdated)
             {
-                LobbyEvents.OnLobbyUpdated?.Invoke(newLobby);
                 currentLobby = newLobby;
                 // send event for updates:
+                LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
             }
 
             yield return new WaitForSecondsRealtime(waitTimeSeconds);
