@@ -4674,6 +4674,7 @@ MonoBehaviour:
   LeaveLobbyBtn: {fileID: 451147566}
   lobbyPrivacyBtn: {fileID: 261562647}
   LobbyPlayerCount: {fileID: 1806872001}
+  lobbyPrivacyText: {fileID: 1161894003}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
