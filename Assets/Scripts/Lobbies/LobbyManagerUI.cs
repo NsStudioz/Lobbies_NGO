@@ -15,21 +15,30 @@ public class LobbyManagerUI : MonoBehaviour
     [Header("Texts")]
     [SerializeField] private TMP_Text LobbyPlayerCount;
 
+    private bool isPrivate = true;
+
     private void Start()
     {
         LeaveLobbyBtn.onClick.AddListener(LeaveLobby);
+        lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
         LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
     }
 
     private void OnDisable()
     {
         LeaveLobbyBtn.onClick.RemoveAllListeners();
+        lobbyPrivacyBtn.onClick.RemoveAllListeners();
         LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
     }
 
     private void LeaveLobby()
     {
         LobbyEvents.OnLeaveLobby?.Invoke();
+    }
+
+    private void Event_OnLobbyPrivacyStateChange()
+    {
+        LobbyEvents.OnLobbyPrivacyStateChange?.Invoke(isPrivate);
     }
 
     private void UpdateTotalPlayersInLobbyText(Lobby currentLobby)
