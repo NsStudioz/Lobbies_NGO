@@ -108,12 +108,14 @@ public class LobbyManager : MonoBehaviour
     {
         MainMenuUI.OnCreateLobbyButtonClicked += CreateNewLobby;
         LobbyEvents.OnLeaveLobby += LeaveCurrentLobby;
+        LobbyEvents.OnLobbyPrivacyStateChange += ChangeLobbyPrivacyState;
     }
 
     private void OnDisable()
     {
         MainMenuUI.OnCreateLobbyButtonClicked -= CreateNewLobby;
         LobbyEvents.OnLeaveLobby -= LeaveCurrentLobby;
+        LobbyEvents.OnLobbyPrivacyStateChange -= ChangeLobbyPrivacyState;
     }
 
     private IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
@@ -173,6 +175,21 @@ public class LobbyManager : MonoBehaviour
 
         //Debug.Log("Created Lobby " + lobby.Name + "  | Lobby's privacy state: " + lobby.IsPrivate + " | Lobby Code: " + lobby.LobbyCode);
         //Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
+    }
+
+    private async void ChangeLobbyPrivacyState(bool privacyState)
+    {
+        if (IsLobbyHost() && currentLobby != null)
+        {
+            UpdateLobbyOptions options = new UpdateLobbyOptions
+            {
+                IsPrivate = !privacyState
+            };
+
+            Lobby lobbyInstance = await LobbyService.Instance.UpdateLobbyAsync(currentLobby.Id, options);
+            currentLobby = lobbyInstance;
+            Debug.Log("Is Lobby Private?: " + currentLobby.IsPrivate);
+        }
     }
 
 
