@@ -185,7 +185,7 @@ public class LobbyManager : MonoBehaviour
         {
             UpdateLobbyOptions options = new UpdateLobbyOptions
             {
-                IsPrivate = !privacyState
+                IsPrivate = privacyState
             };
 
             Lobby lobbyInstance = await LobbyService.Instance.UpdateLobbyAsync(currentLobby.Id, options);
