@@ -197,6 +197,24 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    private async void JoinCurrentLobby(string lobbyCode)
+    {
+        await TryCatchAsyncBool(JoinLobbyByCode(lobbyCode));
+    }
+
+    private async Task JoinLobbyByCode(string lobbyCode)
+    {
+        Player player = await GetPlayer();
+
+        Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, new JoinLobbyByCodeOptions
+        {
+            Player = player
+        });
+
+        currentLobby = lobby;
+        // Show host's lobby panel, hide join lobby panel
+    }
+
 
     private async void LeaveCurrentLobby()
     {
