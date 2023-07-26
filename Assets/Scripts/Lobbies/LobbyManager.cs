@@ -43,7 +43,7 @@ public class LobbyManager : MonoBehaviour
         return false;
     }
 
-    // May lead to potential exception:
+    // Exception fixed, monitoring for further potential issues:
     private async Task<Player> GetPlayer()
     {
         return new Player(AuthenticationService.Instance.PlayerId, null, new Dictionary<string, PlayerDataObject> {
@@ -51,7 +51,7 @@ public class LobbyManager : MonoBehaviour
         });
     }
 
-    // May lead to potential exception:
+    // Exception fixed, monitoring for further potential issues:
     private async Task<string> GetPlayerName()
     {
         playerName = await AuthenticationService.Instance.GetPlayerNameAsync();
@@ -176,7 +176,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnCreateLobby?.Invoke();
 
         //Debug.Log("Created Lobby " + lobby.Name + "  | Lobby's privacy state: " + lobby.IsPrivate + " | Lobby Code: " + lobby.LobbyCode);
-        //Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
+        Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
     }
 
     private async void ChangeLobbyPrivacyState(bool privacyState)
@@ -240,11 +240,11 @@ public class LobbyManager : MonoBehaviour
         refreshLobbyCoroutine = null;
     }
 
-    // need to check if this is a valid async approach (using void)
-    private async void OnApplicationQuit()
+    // This seems to be the proper way when closing app:
+    private void OnApplicationQuit()
     {
         if (IsLobbyHost())
-            await DeleteCurrentLobby();
+            LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
     }
 
 }
