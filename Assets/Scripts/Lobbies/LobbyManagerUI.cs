@@ -16,6 +16,7 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private TMP_Text LobbyPlayerCount;
     [SerializeField] private TMP_Text lobbyPrivacyText;
     [SerializeField] private TMP_Text lobbyCodeText;
+    [SerializeField] private TMP_InputField joinLobbyCodeInputField;
     private readonly string publicLobby = "PUBLIC";
     private readonly string privateLobby = "PRIVATE";
 
@@ -40,6 +41,12 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyCreated -= UpdateLobbyCodeText;
         LobbyEvents.OnLobbyPrivacyStateUpdated -= UpdateLobbyPrivacyText;
 
+    }
+
+    private void ClickToJoinLobbyByCode()
+    {
+        LobbyEvents.OnJoiningLobbyByCode?.Invoke(joinLobbyCodeInputField.text);
+        Debug.Log("Joined lobby!");
     }
 
     private void LeaveLobby()
