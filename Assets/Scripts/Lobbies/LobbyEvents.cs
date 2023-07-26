@@ -11,6 +11,9 @@ public class LobbyEvents
     public delegate void LobbyCreated(string lobbyCode);
     public static LobbyCreated OnLobbyCreated;
 
+    public delegate void JoiningLobbyByCode(string lobbyCode);
+    public static JoiningLobbyByCode OnJoiningLobbyByCode;
+
     public delegate void LeaveLobby();
     public static LeaveLobby OnLeaveLobby;
 
