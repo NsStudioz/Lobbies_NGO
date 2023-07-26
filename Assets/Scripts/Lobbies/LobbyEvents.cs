@@ -8,6 +8,9 @@ public class LobbyEvents
     public delegate void CreateLobby();
     public static CreateLobby OnCreateLobby;
 
+    public delegate void LobbyCreated(string lobbyCode);
+    public static LobbyCreated OnLobbyCreated;
+
     public delegate void LeaveLobby();
     public static LeaveLobby OnLeaveLobby;
 
