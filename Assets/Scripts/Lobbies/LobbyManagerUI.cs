@@ -16,11 +16,17 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private TMP_Text LobbyPlayerCount;
     [SerializeField] private TMP_Text lobbyPrivacyText;
     [SerializeField] private TMP_Text lobbyCodeText;
-    [SerializeField] private TMP_InputField joinLobbyCodeInputField;
     private readonly string publicLobby = "PUBLIC";
     private readonly string privateLobby = "PRIVATE";
 
     private bool isPrivate = true;
+
+    // JoinLobby UI Elements:
+    [Header("JoinLobbyUI_Texts")]
+    [SerializeField] private TMP_InputField joinLobbyCodeInputField;
+
+    [Header("JoinLobbyUI_Buttons")]
+    [SerializeField] private Button leaveJoinLobbyBtn;
 
     private void Start()
     {
