@@ -4812,6 +4812,7 @@ MonoBehaviour:
   lobbyPrivacyText: {fileID: 1161894003}
   lobbyCodeText: {fileID: 432955112}
   joinLobbyCodeInputField: {fileID: 706637785}
+  leaveJoinLobbyBtn: {fileID: 1113039228}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
