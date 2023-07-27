@@ -23,6 +23,9 @@ public class LobbyEvents
     public delegate void LobbyUpdated(Lobby currentLobby);
     public static LobbyUpdated OnLobbyUpdated;
 
+    public delegate void JoinedLobby();
+    public static JoinedLobby OnJoinedLobby;
+
     public delegate void LobbyPrivacyStateChange(bool state);
     public static LobbyPrivacyStateChange OnLobbyPrivacyStateChange;
 
