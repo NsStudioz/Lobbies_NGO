@@ -241,6 +241,8 @@ public class LobbyManager : MonoBehaviour
 
     private async Task LeaveLobby()
     {
+        StopLobbyCoroutines();
+
         if (currentLobby.MaxPlayers > 0)
         {
             await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
@@ -249,10 +251,7 @@ public class LobbyManager : MonoBehaviour
         }
 
         else if (currentLobby.MaxPlayers <= 0)
-        {
-            StopLobbyCoroutines();
             await DeleteCurrentLobby();
-        }
     }
 
     private async Task<bool> DeleteCurrentLobby()
