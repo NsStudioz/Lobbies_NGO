@@ -3862,6 +3862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a5b8828e9c999408aa580ea4bc29c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  refreshLobbyTimer: 1.1
 --- !u!1 &768713106
 GameObject:
   m_ObjectHideFlags: 0

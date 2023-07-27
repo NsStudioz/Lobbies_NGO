@@ -137,7 +137,7 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private IEnumerator RefreshLobbyCoroutine(string lobbyId ,float waitTimeSeconds) // update lobby data (Player count, game mode, etc...)
+    private IEnumerator RefreshLobbyCoroutine(string lobbyId) // update lobby data (Player count, game mode, etc...)
     {
         while (currentLobby != null) // dont use while (true) => this will cause an exception (coroutines continue to work even when lobby is closed due to this)
         {
@@ -152,7 +152,7 @@ public class LobbyManager : MonoBehaviour
                 LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
             }
 
-            yield return new WaitForSecondsRealtime(waitTimeSeconds);
+            yield return new WaitForSecondsRealtime(refreshLobbyTimer);
         }
     }
 
@@ -180,7 +180,7 @@ public class LobbyManager : MonoBehaviour
         currentLobby = lobbyInstance;
 
         heartbeatCoroutine = StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 10f));
-        refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 1.1f));
+        refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
 
         LobbyEvents.OnCreateLobby?.Invoke();
         LobbyEvents.OnLobbyCreated?.Invoke(currentLobby.LobbyCode);
@@ -222,7 +222,7 @@ public class LobbyManager : MonoBehaviour
 
         currentLobby = lobby;
 
-        refreshLobbyCoroutine_Client = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 1.1f));
+        StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
         //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
         LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
 
@@ -277,6 +277,9 @@ public class LobbyManager : MonoBehaviour
     {
         if (IsLobbyHost())
             LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
+
+        if (currentLobby != null)
+            StopAllCoroutines();
     }
 
 }
