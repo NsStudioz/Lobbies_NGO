@@ -7,7 +7,6 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
-using static LobbyEvents;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -21,9 +20,9 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private float refreshLobbyTimer = 1f;
     //private float lobbyPollTimer; // WIP, for update version of refresh lobby.
 
-    private Coroutine heartbeatCoroutine = null;
+/*    private Coroutine heartbeatCoroutine = null;
     private Coroutine refreshLobbyCoroutine = null;
-    private Coroutine refreshLobbyCoroutine_Client = null;
+    private Coroutine refreshLobbyCoroutine_Client = null;*/
 
     #region Helpers
 
@@ -181,8 +180,10 @@ public class LobbyManager : MonoBehaviour
 
         currentLobby = lobbyInstance;
 
-        heartbeatCoroutine = StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 10f));
-        refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
+        //heartbeatCoroutine = StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 10f));
+        //refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
+        StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 10f));
+        StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
 
         LobbyEvents.OnCreateLobby?.Invoke();
         LobbyEvents.OnLobbyCreated?.Invoke(currentLobby.LobbyCode);
@@ -270,18 +271,21 @@ public class LobbyManager : MonoBehaviour
     private void StopLobbyCoroutines()
     {
         StopAllCoroutines();
-        heartbeatCoroutine = null;
-        refreshLobbyCoroutine = null;
+/*        heartbeatCoroutine = null;
+        refreshLobbyCoroutine = null;*/
     }
 
     // This seems to be the proper way when closing app:
     private void OnApplicationQuit()
     {
+        if (currentLobby != null)
+            StopLobbyCoroutines();
+
         if (IsLobbyHost())
             LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
 
-        if (currentLobby != null)
-            StopAllCoroutines();
+        else if (IsLobbyClient())
+            LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
     }
 
 }
