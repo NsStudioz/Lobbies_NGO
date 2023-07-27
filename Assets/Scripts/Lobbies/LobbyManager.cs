@@ -16,6 +16,7 @@ public class LobbyManager : MonoBehaviour
     private string playerName = "";
     private float heartbeatTimer;
     private readonly int MAX_PLAYERS = 4;
+    [SerializeField] private float refreshLobbyTimer = 1f;
 
     private Coroutine heartbeatCoroutine = null;
     private Coroutine refreshLobbyCoroutine = null;
