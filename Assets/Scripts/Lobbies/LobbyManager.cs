@@ -212,7 +212,8 @@ public class LobbyManager : MonoBehaviour
         });
 
         currentLobby = lobby;
-        // Show host's lobby panel, hide join lobby panel
+        LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
+
     }
 
 
