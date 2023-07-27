@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
 using UnityEngine;
+using static LobbyEvents;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -17,6 +19,7 @@ public class LobbyManager : MonoBehaviour
     private float heartbeatTimer;
     private readonly int MAX_PLAYERS = 4;
     [SerializeField] private float refreshLobbyTimer = 1f;
+    //private float lobbyPollTimer; // WIP, for update version of refresh lobby.
 
     private Coroutine heartbeatCoroutine = null;
     private Coroutine refreshLobbyCoroutine = null;
@@ -127,6 +130,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnJoiningLobbyByCode -= JoinCurrentLobbyByCode;
     }
 
+
     private IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
     {
         while (currentLobby != null) // dont use while (true) => this will cause an exception (coroutines continue to work even when lobby is closed due to this)
@@ -155,8 +159,6 @@ public class LobbyManager : MonoBehaviour
             yield return new WaitForSecondsRealtime(refreshLobbyTimer);
         }
     }
-
-
 
     private async void CreateNewLobby()
     {
@@ -283,3 +285,24 @@ public class LobbyManager : MonoBehaviour
     }
 
 }
+
+
+/*    private void Update() // dont use async update
+    {
+        HandleLobbyPolling(Time.deltaTime);
+    }*/
+
+/*    private async Task HandleLobbyPolling(float deltaTime) // update lobby data (Player count, game mode, etc...)
+    {
+        if (currentLobby != null)
+        {
+            lobbyPollTimer -= deltaTime;
+
+            if (lobbyPollTimer < 0f)
+            {
+                float lobbyPollTimerMax = 1.1f;
+                lobbyPollTimer = lobbyPollTimerMax;
+                currentLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
+            }
+        }
+    }*/
