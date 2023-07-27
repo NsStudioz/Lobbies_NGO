@@ -19,6 +19,7 @@ public class LobbyManager : MonoBehaviour
 
     private Coroutine heartbeatCoroutine = null;
     private Coroutine refreshLobbyCoroutine = null;
+    private Coroutine refreshLobbyCoroutine_Client = null;
 
     #region Helpers
 
@@ -219,7 +220,9 @@ public class LobbyManager : MonoBehaviour
         });
 
         currentLobby = lobby;
-        LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
+
+        refreshLobbyCoroutine_Client = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 1.1f));
+        //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
         LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
 
     }
