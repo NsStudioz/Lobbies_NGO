@@ -27,12 +27,14 @@ public class LobbyManagerUI : MonoBehaviour
 
     [Header("JoinLobbyUI_Buttons")]
     [SerializeField] private Button leaveJoinLobbyBtn;
+    [SerializeField] private Button JoinLobbyByCodeBtn;
 
     private void Start()
     {
         LeaveLobbyBtn.onClick.AddListener(LeaveLobby);
         leaveJoinLobbyBtn.onClick.AddListener(Event_LeaveJoinLobbyUI);
         lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
+        JoinLobbyByCodeBtn.onClick.AddListener(ClickToJoinLobbyByCode);
         LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnCreateLobby += InitializeLobbyPrivacyStateToPrivate;
         LobbyEvents.OnLobbyCreated += UpdateLobbyCodeText;
@@ -44,6 +46,7 @@ public class LobbyManagerUI : MonoBehaviour
         LeaveLobbyBtn.onClick.RemoveAllListeners();
         leaveJoinLobbyBtn.onClick.RemoveAllListeners();
         lobbyPrivacyBtn.onClick.RemoveAllListeners();
+        JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
         LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnCreateLobby -= InitializeLobbyPrivacyStateToPrivate;
         LobbyEvents.OnLobbyCreated -= UpdateLobbyCodeText;
