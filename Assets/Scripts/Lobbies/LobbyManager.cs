@@ -22,9 +22,14 @@ public class LobbyManager : MonoBehaviour
 
     #region Helpers
 
-    private bool IsLobbyHost()
+    public bool IsLobbyHost()
     {
         return currentLobby != null && currentLobby.HostId == AuthenticationService.Instance.PlayerId;
+    }
+
+    public bool IsLobbyClient()
+    {
+        return currentLobby != null && AuthenticationService.Instance.PlayerId != currentLobby.HostId;
     }
 
     private bool IsPlayerInLobby()
