@@ -109,6 +109,7 @@ public class LobbyManager : MonoBehaviour
         MainMenuUI.OnCreateLobbyButtonClicked += CreateNewLobby;
         LobbyEvents.OnLeaveLobby += LeaveCurrentLobby;
         LobbyEvents.OnLobbyPrivacyStateChange += ChangeLobbyPrivacyState;
+        LobbyEvents.OnJoiningLobbyByCode += JoinCurrentLobbyByCode;
     }
 
     private void OnDisable()
@@ -116,6 +117,7 @@ public class LobbyManager : MonoBehaviour
         MainMenuUI.OnCreateLobbyButtonClicked -= CreateNewLobby;
         LobbyEvents.OnLeaveLobby -= LeaveCurrentLobby;
         LobbyEvents.OnLobbyPrivacyStateChange -= ChangeLobbyPrivacyState;
+        LobbyEvents.OnJoiningLobbyByCode -= JoinCurrentLobbyByCode;
     }
 
     private IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
@@ -197,7 +199,7 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private async void JoinCurrentLobby(string lobbyCode)
+    private async void JoinCurrentLobbyByCode(string lobbyCode)
     {
         await TryCatchAsyncBool(JoinLobbyByCode(lobbyCode));
     }

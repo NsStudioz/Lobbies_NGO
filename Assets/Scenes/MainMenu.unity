@@ -4813,7 +4813,7 @@ MonoBehaviour:
   lobbyCodeText: {fileID: 432955112}
   joinLobbyCodeInputField: {fileID: 706637785}
   leaveJoinLobbyBtn: {fileID: 1113039228}
-  JoinLobbyByCodeBtn: {fileID: 0}
+  JoinLobbyByCodeBtn: {fileID: 557369698}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -4915,7 +4915,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &996408037
 RectTransform:
   m_ObjectHideFlags: 0
