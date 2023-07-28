@@ -18,54 +18,40 @@ public class MainMenuUI : MonoBehaviour
 
     [SerializeField] private Button createLobbyButton;
     [SerializeField] private Button joinLobbyButton;
-    [SerializeField] private Button optionsButton;
+    [SerializeField] private Button optionsButton; // still not sure if I should do it, seems unnecessary atm...
 
     [SerializeField] private TMP_Text playerNameText;
     [SerializeField] private string PLAYER_NAME;
 
-    // TO-DO:
-    // Options button, options panel & Show Options menu
-
     private void OnEnable()
-    {
-        Login.OnLoginSuccess += ShowPlayerNameAsync;
-        LobbyEvents.OnLeaveLobby += ShowMainMenuPanel;
-        LobbyEvents.OnLeaveJoinLobbyUI += ShowMainMenuPanel;
-        LobbyEvents.OnJoinedLobby += ShowCreateLobbyPanel;
-        //
+    {   
         createLobbyButton.onClick.AddListener(() =>
         {
             ShowCreateLobbyPanel();
-            Event_OnCreateLobbyButtonClicked();
+            OnCreateLobbyButtonClicked?.Invoke();
         });
 
         joinLobbyButton.onClick.AddListener(() =>
         {
             ShowJoinLobbyPanel();
-            Event_OnJoinLobbyButtonClicked();
+            OnJoinLobbyButtonClicked?.Invoke();
         });
-    }
-
-    private void Event_OnJoinLobbyButtonClicked()
-    {
-        OnJoinLobbyButtonClicked?.Invoke();
-    }
-
-    private void Event_OnCreateLobbyButtonClicked()
-    {
-        OnCreateLobbyButtonClicked?.Invoke();
+        //
+        Login.OnLoginSuccess += ShowPlayerNameAsync;
+        LobbyEvents.OnLeaveLobby += ShowMainMenuPanel;
+        LobbyEvents.OnLeaveJoinLobbyUI += ShowMainMenuPanel;
+        LobbyEvents.OnJoinedLobby += ShowCreateLobbyPanel;
     }
 
     private void OnDisable()
     {
+        createLobbyButton.onClick.RemoveAllListeners();
+        joinLobbyButton.onClick.RemoveAllListeners();
+        //
         Login.OnLoginSuccess -= ShowPlayerNameAsync;
         LobbyEvents.OnLeaveLobby -= ShowMainMenuPanel;
         LobbyEvents.OnLeaveJoinLobbyUI -= ShowMainMenuPanel;
         LobbyEvents.OnJoinedLobby -= ShowCreateLobbyPanel;
-        //
-        createLobbyButton.onClick.RemoveAllListeners();
-        joinLobbyButton.onClick.RemoveAllListeners();
-        optionsButton.onClick.RemoveAllListeners();
     }
 
     private void ShowMainMenuPanel()
