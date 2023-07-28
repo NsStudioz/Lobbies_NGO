@@ -27,7 +27,7 @@ public class LobbyEvents
     public delegate void LeaveJoinLobbyUI();
     public static LeaveJoinLobbyUI OnLeaveJoinLobbyUI;
 
-    // Lobby_Update
+    // Lobby_Update:
     public delegate void LobbyUpdated(Lobby currentLobby);
     public static LobbyUpdated OnLobbyUpdated;
 
