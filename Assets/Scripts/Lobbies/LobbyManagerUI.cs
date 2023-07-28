@@ -8,17 +8,18 @@ using UnityEngine.UI;
 
 public class LobbyManagerUI : MonoBehaviour
 {
-    [Header("Buttons")]
-    [SerializeField] private Button LeaveLobbyBtn;
+    // CreateLobby UI Elements:
+    [Header("CreateLobbyUI_Buttons")]
+    [SerializeField] private Button leaveLobbyBtn;
     [SerializeField] private Button lobbyPrivacyBtn;
 
-    [Header("Texts")]
-    [SerializeField] private TMP_Text LobbyPlayerCount;
+    [Header("CreateLobbyUI_Texts")]
+    [SerializeField] private TMP_Text lobbyPlayerCount;
     [SerializeField] private TMP_Text lobbyPrivacyText;
     [SerializeField] private TMP_Text lobbyCodeText;
+
     private readonly string publicLobby = "PUBLIC";
     private readonly string privateLobby = "PRIVATE";
-
     private bool isPrivate = true;
 
     // JoinLobby UI Elements:
@@ -31,10 +32,13 @@ public class LobbyManagerUI : MonoBehaviour
 
     private void Start()
     {
-        LeaveLobbyBtn.onClick.AddListener(LeaveLobby);
-        leaveJoinLobbyBtn.onClick.AddListener(Event_LeaveJoinLobbyUI);
+        // Button Listeners:
+        leaveLobbyBtn.onClick.AddListener(Event_OnLeaveLobby);
+        leaveJoinLobbyBtn.onClick.AddListener(Event_OnLeaveJoinLobbyUI);
         lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
-        JoinLobbyByCodeBtn.onClick.AddListener(ClickToJoinLobbyByCode);
+        JoinLobbyByCodeBtn.onClick.AddListener(Event_OnJoiningLobbyByCode);
+
+        // Events:
         LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnCreateLobby += InitializeLobbyPrivacyStateToPrivate;
         LobbyEvents.OnLobbyCreated += UpdateLobbyCodeText;
@@ -43,31 +47,25 @@ public class LobbyManagerUI : MonoBehaviour
 
     private void OnDisable()
     {
-        LeaveLobbyBtn.onClick.RemoveAllListeners();
+        // Button Listeners:
+        leaveLobbyBtn.onClick.RemoveAllListeners();
         leaveJoinLobbyBtn.onClick.RemoveAllListeners();
         lobbyPrivacyBtn.onClick.RemoveAllListeners();
         JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
+
+        // Events:
         LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnCreateLobby -= InitializeLobbyPrivacyStateToPrivate;
         LobbyEvents.OnLobbyCreated -= UpdateLobbyCodeText;
         LobbyEvents.OnLobbyPrivacyStateUpdated -= UpdateLobbyPrivacyText;
-
     }
 
-    private void ClickToJoinLobbyByCode()
-    {
-        LobbyEvents.OnJoiningLobbyByCode?.Invoke(joinLobbyCodeInputField.text);
-        Debug.Log("Joined lobby!");
-    }
 
-    private void LeaveLobby()
+    #region CreateLobby_Functions:
+
+    private void Event_OnLeaveLobby()
     {
         LobbyEvents.OnLeaveLobby?.Invoke();
-    }
-
-    private void Event_LeaveJoinLobbyUI()
-    {
-        LobbyEvents.OnLeaveJoinLobbyUI?.Invoke();
     }
 
     private void InitializeLobbyPrivacyStateToPrivate()
@@ -95,7 +93,7 @@ public class LobbyManagerUI : MonoBehaviour
 
     private void UpdateTotalPlayersInLobbyText(Lobby currentLobby)
     {
-        LobbyPlayerCount.text = currentLobby.Players.Count.ToString() + "/" + currentLobby.MaxPlayers.ToString();
+        lobbyPlayerCount.text = currentLobby.Players.Count.ToString() + "/" + currentLobby.MaxPlayers.ToString();
     }
 
     private void UpdateLobbyCodeText(string lobbyCode)
@@ -103,5 +101,23 @@ public class LobbyManagerUI : MonoBehaviour
         lobbyCodeText.text = lobbyCode;
     }
 
+    #endregion
+
+    #region JoinLobby_Functions:
+
+    private void Event_OnJoiningLobbyByCode()
+    {
+        LobbyEvents.OnJoiningLobbyByCode?.Invoke(joinLobbyCodeInputField.text);
+        Debug.Log("Joining lobby!");
+    }
+
+    private void Event_OnLeaveJoinLobbyUI()
+    {
+        LobbyEvents.OnLeaveJoinLobbyUI?.Invoke();
+    }
+
+
+
+    #endregion
 
 }
