@@ -10,21 +10,26 @@ using UnityEngine;
 
 public class LobbyManager : MonoBehaviour
 {
+    
+    [SerializeField] private float refreshLobbyTimer = 1f;
+    //private float lobbyPollTimer; // WIP, for update version of refresh lobby.
 
     private Lobby currentLobby;
 
     private string KEY_PLAYER_NAME = "PlayerName";
     private string playerName = "";
-    private float heartbeatTimer;
     private readonly int MAX_PLAYERS = 4;
-    [SerializeField] private float refreshLobbyTimer = 1f;
-    //private float lobbyPollTimer; // WIP, for update version of refresh lobby.
 
-/*    private Coroutine heartbeatCoroutine = null;
-    private Coroutine refreshLobbyCoroutine = null;
-    private Coroutine refreshLobbyCoroutine_Client = null;*/
+    /*    private Coroutine heartbeatCoroutine = null;
+        private Coroutine refreshLobbyCoroutine = null;
+        private Coroutine refreshLobbyCoroutine_Client = null;*/
 
-    #region Helpers
+    #region Lobby_Helpers:
+
+    public Lobby GetCurrentLobby()
+    {
+        return currentLobby;
+    }
 
     public bool IsLobbyHost()
     {
@@ -36,7 +41,7 @@ public class LobbyManager : MonoBehaviour
         return currentLobby != null && AuthenticationService.Instance.PlayerId != currentLobby.HostId;
     }
 
-    private bool IsPlayerInLobby()
+    public bool IsPlayerInLobby()
     {
         if (currentLobby != null && currentLobby.Players != null)
         {
@@ -68,12 +73,9 @@ public class LobbyManager : MonoBehaviour
         return playerName;
     }
 
-    public Lobby GetCurrentLobby()
-    {
-        return currentLobby;
-    }
+    #endregion
 
-
+    #region TryCatch_Helpers:
     private async Task<bool> TryCatchAsyncBool(Task promise)
     {
         try
@@ -89,7 +91,7 @@ public class LobbyManager : MonoBehaviour
         return true;
     }
 
-    private async Task<bool> CurrentLobby_TryCatchAsyncBool(Task promise)
+    private async Task<bool> CurrentLobbyCheck_TryCatchAsyncBool(Task promise)
     {
         if (currentLobby != null)
         {
@@ -115,20 +117,21 @@ public class LobbyManager : MonoBehaviour
 
     private void OnEnable()
     {
-        MainMenuUI.OnCreateLobbyButtonClicked += CreateNewLobby;
+        MainMenuUI.OnCreateLobbyButtonClicked += TryCatch_CreateNewLobby;
         LobbyEvents.OnLeaveLobby += LeaveCurrentLobby;
         LobbyEvents.OnLobbyPrivacyStateChange += ChangeLobbyPrivacyState;
-        LobbyEvents.OnJoiningLobbyByCode += JoinCurrentLobbyByCode;
+        LobbyEvents.OnJoiningLobbyByCode += TryCatch_JoinLobbyByCode;
     }
 
     private void OnDisable()
     {
-        MainMenuUI.OnCreateLobbyButtonClicked -= CreateNewLobby;
+        MainMenuUI.OnCreateLobbyButtonClicked -= TryCatch_CreateNewLobby;
         LobbyEvents.OnLeaveLobby -= LeaveCurrentLobby;
         LobbyEvents.OnLobbyPrivacyStateChange -= ChangeLobbyPrivacyState;
-        LobbyEvents.OnJoiningLobbyByCode -= JoinCurrentLobbyByCode;
+        LobbyEvents.OnJoiningLobbyByCode -= TryCatch_JoinLobbyByCode;
     }
 
+    #region Lobby_Updates:
 
     private IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
     {
@@ -159,13 +162,39 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private async void CreateNewLobby()
+    /*    private void Update() // dont use async update
     {
-        await TryCatchAsyncBool(NewLobby());
+        HandleLobbyPolling(Time.deltaTime);
+    }*/
+
+    /*    private async Task HandleLobbyPolling(float deltaTime) // update lobby data (Player count, game mode, etc...)
+        {
+            if (currentLobby != null)
+            {
+                lobbyPollTimer -= deltaTime;
+
+                if (lobbyPollTimer < 0f)
+                {
+                    float lobbyPollTimerMax = 1.1f;
+                    lobbyPollTimer = lobbyPollTimerMax;
+                    currentLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
+                }
+            }
+        }*/
+
+    #endregion
+
+
+    #region Lobby_Connections:
+
+    // Create_Lobby:
+    private async void TryCatch_CreateNewLobby()
+    {
+        await TryCatchAsyncBool(CreateNewLobby());
         Debug.Log(currentLobby);
     }
 
-    private async Task NewLobby()
+    private async Task CreateNewLobby()
     {
         string lobbyName = "New Lobby";
         Player player = await GetPlayer();
@@ -188,10 +217,37 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnCreateLobby?.Invoke();
         LobbyEvents.OnLobbyCreated?.Invoke(currentLobby.LobbyCode);
 
-        //Debug.Log("Created Lobby " + lobby.Name + "  | Lobby's privacy state: " + lobby.IsPrivate + " | Lobby Code: " + lobby.LobbyCode);
         Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
     }
 
+
+    // Join_Lobby:
+    private async void TryCatch_JoinLobbyByCode(string lobbyCode)
+    {
+        await TryCatchAsyncBool(JoinLobbyByCode(lobbyCode));
+    }
+
+    private async Task JoinLobbyByCode(string lobbyCode)
+    {
+        Player player = await GetPlayer();
+
+        Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, new JoinLobbyByCodeOptions
+        {
+            Player = player
+        });
+
+        currentLobby = lobby;
+
+        StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
+        LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
+
+        //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
+    }
+
+    #endregion
+
+
+    #region Lobby_Host_Functions:
     private async void ChangeLobbyPrivacyState(bool privacyState)
     {
         if (IsLobbyHost() && currentLobby != null)
@@ -209,32 +265,15 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private async void JoinCurrentLobbyByCode(string lobbyCode)
-    {
-        await TryCatchAsyncBool(JoinLobbyByCode(lobbyCode));
-    }
 
-    private async Task JoinLobbyByCode(string lobbyCode)
-    {
-        Player player = await GetPlayer();
+    #endregion
 
-        Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, new JoinLobbyByCodeOptions
-        {
-            Player = player
-        });
 
-        currentLobby = lobby;
-
-        StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
-        //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
-        LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
-
-    }
-
+    #region Lobby_Exit_Handling:
 
     private async void LeaveCurrentLobby()
     {
-        await CurrentLobby_TryCatchAsyncBool(LeaveLobby());
+        await CurrentLobbyCheck_TryCatchAsyncBool(LeaveLobby());
 
         Debug.Log("Left Lobby");
     }
@@ -256,7 +295,7 @@ public class LobbyManager : MonoBehaviour
 
     private async Task<bool> DeleteCurrentLobby()
     {
-        bool succeded = await CurrentLobby_TryCatchAsyncBool(DeleteLobby());
+        bool succeded = await CurrentLobbyCheck_TryCatchAsyncBool(DeleteLobby());
         return succeded;
     }
 
@@ -274,7 +313,9 @@ public class LobbyManager : MonoBehaviour
         refreshLobbyCoroutine = null;*/
     }
 
-    // This seems to be the proper way when closing app:
+    #endregion
+
+    // This seems to be the proper way when closing app (Not 100% sure but it works atm):
     private void OnApplicationQuit()
     {
         if (currentLobby != null)
@@ -290,22 +331,3 @@ public class LobbyManager : MonoBehaviour
 }
 
 
-/*    private void Update() // dont use async update
-    {
-        HandleLobbyPolling(Time.deltaTime);
-    }*/
-
-/*    private async Task HandleLobbyPolling(float deltaTime) // update lobby data (Player count, game mode, etc...)
-    {
-        if (currentLobby != null)
-        {
-            lobbyPollTimer -= deltaTime;
-
-            if (lobbyPollTimer < 0f)
-            {
-                float lobbyPollTimerMax = 1.1f;
-                lobbyPollTimer = lobbyPollTimerMax;
-                currentLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
-            }
-        }
-    }*/
