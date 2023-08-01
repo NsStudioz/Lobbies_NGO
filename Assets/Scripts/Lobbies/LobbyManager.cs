@@ -16,7 +16,7 @@ public class LobbyManager : MonoBehaviour
 
     private Lobby currentLobby;
 
-    private string KEY_PLAYER_NAME = "PlayerName";
+    public const string KEY_PLAYER_NAME = "PlayerName";
     private string playerName = "";
     private readonly int MAX_PLAYERS = 4;
 
