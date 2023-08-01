@@ -22,6 +22,10 @@ public class LobbyManagerUI : MonoBehaviour
     private readonly string privateLobby = "PRIVATE";
     private bool isPrivate = true;
 
+    [Header("CreateLobbyUI_Lists")]
+    [SerializeField] private List<Player> lobbyPlayers = new List<Player>();
+    [SerializeField] private List<LobbyPlayerData> lobbyPlayerDatas = new List<LobbyPlayerData>();
+
     // JoinLobby UI Elements:
     [Header("JoinLobbyUI_Texts")]
     [SerializeField] private TMP_InputField joinLobbyCodeInputField;
