@@ -18,7 +18,7 @@ public class LobbyPlayerData : MonoBehaviour
     }
 
     // For when a player in not populating this data.
-    private void ResetPlayerNameText() 
+    public void ResetPlayerNameText()
     {
         playerName.text = emptyPlayerName;
     }
