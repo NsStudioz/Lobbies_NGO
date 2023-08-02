@@ -239,8 +239,8 @@ public class LobbyManager : MonoBehaviour
         currentLobby = lobby;
 
         StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
-        LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
 
+        LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
         //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
     }
 
