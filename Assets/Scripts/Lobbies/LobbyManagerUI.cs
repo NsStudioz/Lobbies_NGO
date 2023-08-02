@@ -48,6 +48,7 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateUpdated += UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayersNames;
+        LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
     }
 
     private void OnDisable()
@@ -64,6 +65,7 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateUpdated -= UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayersNames;
+        LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayerKickButtons;
     }
 
 
@@ -74,6 +76,7 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLeaveLobby?.Invoke();
     }
 
+    // Lobby Privacy:
     private void InitializeLobbyPrivacyStateToPrivate()
     {
         if (!isPrivate)
@@ -97,16 +100,21 @@ public class LobbyManagerUI : MonoBehaviour
             lobbyPrivacyText.text = publicLobby;
     }
 
+
+    // Player Count:
     private void UpdateTotalPlayersInLobbyText(Lobby currentLobby)
     {
         lobbyPlayerCount.text = currentLobby.Players.Count.ToString() + "/" + currentLobby.MaxPlayers.ToString();
     }
 
+    // Lobby Code:
     private void UpdateLobbyCodeText(string lobbyCode)
     {
         lobbyCodeText.text = lobbyCode;
     }
 
+
+    // Player Names:
     private void Lobby_SyncPlayersNames(Lobby lobby)
     {
         Lobby_SortPlayersList(lobby);
@@ -135,6 +143,25 @@ public class LobbyManagerUI : MonoBehaviour
     {
         for (int i = 0; i < lobby.Players.Count; i++)
             lobbyPlayerDatas[i].UpdatePlayerName(lobbyPlayers[i]);
+    }
+
+    // Lobby Kick Players:
+    private void Lobby_SyncPlayerKickButtons(Lobby lobby)
+    {
+        Lobby_DeactivatePlayerKickButtons(lobby);
+        Lobby_ActivatePlayerKickButtons(lobby);
+    }
+
+    private void Lobby_DeactivatePlayerKickButtons(Lobby lobby)
+    {
+        for (int i = 1; i < lobby.MaxPlayers; i++) // lobby.MaxPlayers => currently works, monitoring for possible index errors
+            lobbyPlayerDatas[i].DeactivateKickButtons();
+    }
+
+    private void Lobby_ActivatePlayerKickButtons(Lobby lobby)
+    {
+        for (int i = 1; i < lobby.Players.Count; i++)
+            lobbyPlayerDatas[i].ActivateKickButtons();
     }
 
     #endregion
