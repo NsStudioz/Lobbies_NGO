@@ -23,8 +23,8 @@ public class LobbyManagerUI : MonoBehaviour
     private bool isPrivate = true;
 
     [Header("CreateLobbyUI_Lists")]
-    [SerializeField] private List<Player> lobbyPlayers = new List<Player>();
     [SerializeField] private List<LobbyPlayerData> lobbyPlayerDatas = new List<LobbyPlayerData>();
+    private List<Player> lobbyPlayers = new List<Player>();
 
     // JoinLobby UI Elements:
     [Header("JoinLobbyUI_Texts")]
@@ -43,10 +43,11 @@ public class LobbyManagerUI : MonoBehaviour
         JoinLobbyByCodeBtn.onClick.AddListener(Event_OnJoiningLobbyByCode);
 
         // Events:
-        LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnCreateLobby += InitializeLobbyPrivacyStateToPrivate;
         LobbyEvents.OnLobbyCreated += UpdateLobbyCodeText;
         LobbyEvents.OnLobbyPrivacyStateUpdated += UpdateLobbyPrivacyText;
+        LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
+        LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayersNames;
     }
 
     private void OnDisable()
@@ -58,10 +59,11 @@ public class LobbyManagerUI : MonoBehaviour
         JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
 
         // Events:
-        LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnCreateLobby -= InitializeLobbyPrivacyStateToPrivate;
         LobbyEvents.OnLobbyCreated -= UpdateLobbyCodeText;
         LobbyEvents.OnLobbyPrivacyStateUpdated -= UpdateLobbyPrivacyText;
+        LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
+        LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayersNames;
     }
 
 
@@ -103,6 +105,36 @@ public class LobbyManagerUI : MonoBehaviour
     private void UpdateLobbyCodeText(string lobbyCode)
     {
         lobbyCodeText.text = lobbyCode;
+    }
+
+    private void Lobby_SyncPlayersNames(Lobby lobby)
+    {
+        Lobby_SortPlayersList(lobby);
+        Lobby_ClearPlayerNames(lobby);
+        Lobby_UpdatePlayerNames(lobby);
+    }
+
+    private void Lobby_SortPlayersList(Lobby lobby)
+    {
+        lobbyPlayers.Clear();
+
+        foreach (Player player in lobby.Players)
+            lobbyPlayers.Add(player);
+
+/*        for (int i = 0; i < lobby.Players.Count; i++)
+            lobbyPlayers.Add(lobby.Players[i]);*/
+    }
+
+    private void Lobby_ClearPlayerNames(Lobby lobby)
+    {
+        for (int i = 0; i < lobby.MaxPlayers - 1; i++)
+            lobbyPlayerDatas[i].ResetPlayerNameText();
+    }
+
+    private void Lobby_UpdatePlayerNames(Lobby lobby)
+    {
+        for (int i = 0; i < lobby.Players.Count; i++)
+            lobbyPlayerDatas[i].UpdatePlayerName(lobbyPlayers[i]);
     }
 
     #endregion
