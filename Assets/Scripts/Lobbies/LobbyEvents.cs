@@ -27,6 +27,13 @@ public class LobbyEvents
     public delegate void LeaveJoinLobbyUI();
     public static LeaveJoinLobbyUI OnLeaveJoinLobbyUI;
 
+    // Player_Kick:
+    public delegate void PlayerKicked(string playerId);
+    public static PlayerKicked OnPlayerKicked;
+
+    public delegate void KickedFromLobby();
+    public static KickedFromLobby OnKickedFromLobby;
+
     // Lobby_Update:
     public delegate void LobbyUpdated(Lobby currentLobby);
     public static LobbyUpdated OnLobbyUpdated;
