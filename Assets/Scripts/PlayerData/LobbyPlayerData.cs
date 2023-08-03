@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class LobbyPlayerData : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI playerName;
     private readonly string emptyPlayerName = "<EMPTY SLOT>";
-    [SerializeField] private Button kickPlayerBtn = null;
+    [SerializeField] private Button kickPlayerBtn;
 
     private Player player;
 
@@ -53,7 +54,7 @@ public class LobbyPlayerData : MonoBehaviour
     {
         if (player != null)
         {
-            //lobbymanager.instance.KickPlayer(player.Id);
+            LobbyManager.Instance.TryCatch_KickPlayer(player.Id);
         }
     }
 
