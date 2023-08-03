@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
-using Unity.VisualScripting;
 using UnityEngine;
+
 
 public class LobbyManager : MonoBehaviour
 {
-    
+    public static LobbyManager Instance;
+
     [SerializeField] private float refreshLobbyTimer = 1f;
-    //private float lobbyPollTimer; // WIP, for update version of refresh lobby.
+    [SerializeField] private float lobbyPollTimer = 1.1f; // WIP, for update version of refresh lobby.
 
     private Lobby currentLobby;
 
@@ -115,12 +116,18 @@ public class LobbyManager : MonoBehaviour
 
     #endregion
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void OnEnable()
     {
         MainMenuUI.OnCreateLobbyButtonClicked += TryCatch_CreateNewLobby;
         LobbyEvents.OnLeaveLobby += LeaveCurrentLobby;
         LobbyEvents.OnLobbyPrivacyStateChange += ChangeLobbyPrivacyState;
         LobbyEvents.OnJoiningLobbyByCode += TryCatch_JoinLobbyByCode;
+        //LobbyEvents.OnPlayerKicked += TryCatch_KickPlayer;
     }
 
     private void OnDisable()
@@ -129,6 +136,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnLeaveLobby -= LeaveCurrentLobby;
         LobbyEvents.OnLobbyPrivacyStateChange -= ChangeLobbyPrivacyState;
         LobbyEvents.OnJoiningLobbyByCode -= TryCatch_JoinLobbyByCode;
+        //LobbyEvents.OnPlayerKicked -= TryCatch_KickPlayer;
     }
 
     #region Lobby_Updates:
@@ -145,42 +153,26 @@ public class LobbyManager : MonoBehaviour
 
     private IEnumerator RefreshLobbyCoroutine(string lobbyId) // update lobby data (Player count, game mode, etc...)
     {
+        // Original (No Kick Update):
         while (currentLobby != null) // dont use while (true) => this will cause an exception (coroutines continue to work even when lobby is closed due to this)
         {
-            Task<Lobby> task = LobbyService.Instance.GetLobbyAsync(lobbyId);
-            yield return new WaitUntil(() => task.IsCompleted);
-
-            Lobby newLobby = task.Result;
-            if(newLobby.LastUpdated > currentLobby.LastUpdated)
+            if (IsPlayerInLobby())
             {
-                currentLobby = newLobby;
-                // send event for updates:
-                LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
+                Task<Lobby> task = LobbyService.Instance.GetLobbyAsync(lobbyId);
+                yield return new WaitUntil(() => task.IsCompleted);
+
+                Lobby newLobby = task.Result;
+                if (newLobby.LastUpdated > currentLobby.LastUpdated)
+                {
+                    currentLobby = newLobby;
+                    // send event for updates:
+                    LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
+                }
             }
 
             yield return new WaitForSecondsRealtime(refreshLobbyTimer);
         }
     }
-
-    /*    private void Update() // dont use async update
-    {
-        HandleLobbyPolling(Time.deltaTime);
-    }*/
-
-    /*    private async Task HandleLobbyPolling(float deltaTime) // update lobby data (Player count, game mode, etc...)
-        {
-            if (currentLobby != null)
-            {
-                lobbyPollTimer -= deltaTime;
-
-                if (lobbyPollTimer < 0f)
-                {
-                    float lobbyPollTimerMax = 1.1f;
-                    lobbyPollTimer = lobbyPollTimerMax;
-                    currentLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
-                }
-            }
-        }*/
 
     #endregion
 
@@ -209,8 +201,6 @@ public class LobbyManager : MonoBehaviour
 
         currentLobby = lobbyInstance;
 
-        //heartbeatCoroutine = StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 10f));
-        //refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
         StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 10f));
         StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
 
@@ -265,6 +255,17 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+
+    public async void TryCatch_KickPlayer(string playerId)
+    {
+        if (IsLobbyHost())
+            await TryCatchAsyncBool(KickPlayer(playerId));
+    }
+
+    private async Task KickPlayer(string playerId)
+    {
+        await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, playerId);
+    }
 
     #endregion
 
