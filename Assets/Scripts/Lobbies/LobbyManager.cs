@@ -141,6 +141,47 @@ public class LobbyManager : MonoBehaviour
 
     #region Lobby_Updates:
 
+    private void Update()
+    {
+        HandleLobbyPollingNew(); // KICK FUNCTION WORKS! Exception still thrown, need further check & research on solving this.
+    }
+
+    private async void HandleLobbyPollingNew()
+    {
+        if (currentLobby != null)
+        {
+            lobbyPollTimer -= Time.deltaTime;
+            if (lobbyPollTimer <= 0)
+            {
+                float lobbyPollTimerMax = 1.1f;
+                lobbyPollTimer = lobbyPollTimerMax;
+                try
+                {
+                    if (IsPlayerInLobby())
+                    {
+                        Lobby newLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
+                        currentLobby = newLobby;
+                        LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
+                    }
+                    else
+                    {
+                        currentLobby = null;
+                        LobbyEvents.OnKickedFromLobby?.Invoke();
+                    }
+                }
+                catch (LobbyServiceException e)
+                {
+                    Debug.Log(e);
+                    if ((e.Reason == LobbyExceptionReason.Forbidden || e.Reason == LobbyExceptionReason.LobbyNotFound))
+                    {
+                        currentLobby = null;
+                        LobbyEvents.OnKickedFromLobby?.Invoke();
+                    }
+                }
+            }
+        }
+    }
+
     private IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
     {
         while (currentLobby != null) // dont use while (true) => this will cause an exception (coroutines continue to work even when lobby is closed due to this)
@@ -202,7 +243,7 @@ public class LobbyManager : MonoBehaviour
         currentLobby = lobbyInstance;
 
         StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 10f));
-        StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
+        //StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
 
         LobbyEvents.OnCreateLobby?.Invoke();
         LobbyEvents.OnLobbyCreated?.Invoke(currentLobby.LobbyCode);
@@ -228,7 +269,7 @@ public class LobbyManager : MonoBehaviour
 
         currentLobby = lobby;
 
-        StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
+        //StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
 
         LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
         //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
@@ -281,7 +322,7 @@ public class LobbyManager : MonoBehaviour
 
     private async Task LeaveLobby()
     {
-        StopLobbyCoroutines();
+        //StopLobbyCoroutines();
 
         if (currentLobby.MaxPlayers > 0)
         {
