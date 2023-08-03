@@ -41,6 +41,8 @@ public class MainMenuUI : MonoBehaviour
         LobbyEvents.OnLeaveLobby += ShowMainMenuPanel;
         LobbyEvents.OnLeaveJoinLobbyUI += ShowMainMenuPanel;
         LobbyEvents.OnJoinedLobby += ShowCreateLobbyPanel;
+        LobbyEvents.OnKickedFromLobby += ShowMainMenuPanel;
+
     }
 
     private void OnDisable()
@@ -52,6 +54,8 @@ public class MainMenuUI : MonoBehaviour
         LobbyEvents.OnLeaveLobby -= ShowMainMenuPanel;
         LobbyEvents.OnLeaveJoinLobbyUI -= ShowMainMenuPanel;
         LobbyEvents.OnJoinedLobby -= ShowCreateLobbyPanel;
+        LobbyEvents.OnKickedFromLobby -= ShowMainMenuPanel;
+
     }
 
     private void ShowMainMenuPanel()
