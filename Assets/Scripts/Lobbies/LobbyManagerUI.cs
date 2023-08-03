@@ -48,7 +48,7 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateUpdated += UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayersNames;
-        LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
+        //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
     }
 
     private void OnDisable()
@@ -65,7 +65,7 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateUpdated -= UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayersNames;
-        LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayerKickButtons;
+        //LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayerKickButtons;
     }
 
 
@@ -120,6 +120,8 @@ public class LobbyManagerUI : MonoBehaviour
         Lobby_SortPlayersList(lobby);
         Lobby_ClearPlayerNames(lobby);
         Lobby_UpdatePlayerNames(lobby);
+        // needs better placement:
+        Lobby_SyncPlayerKickButtons(lobby);
     }
 
     private void Lobby_SortPlayersList(Lobby lobby)
@@ -145,7 +147,7 @@ public class LobbyManagerUI : MonoBehaviour
             lobbyPlayerDatas[i].UpdatePlayerName(lobbyPlayers[i]);
     }
 
-    // Lobby Kick Players:
+    // Lobby Kick Buttons:
     private void Lobby_SyncPlayerKickButtons(Lobby lobby)
     {
         Lobby_DeactivatePlayerKickButtons(lobby);
@@ -154,7 +156,7 @@ public class LobbyManagerUI : MonoBehaviour
 
     private void Lobby_DeactivatePlayerKickButtons(Lobby lobby)
     {
-        for (int i = 1; i < lobby.MaxPlayers; i++) // lobby.MaxPlayers => currently works, monitoring for possible index errors
+        for (int i = 1; i < lobby.MaxPlayers; i++) // lobby.MaxPlayers => currently works, monitoring for possible errors
             lobbyPlayerDatas[i].DeactivateKickButtons();
     }
 
