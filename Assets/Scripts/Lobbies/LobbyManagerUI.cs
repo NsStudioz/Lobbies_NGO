@@ -34,6 +34,13 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private Button leaveJoinLobbyBtn;
     [SerializeField] private Button JoinLobbyByCodeBtn;
 
+    private void Lobby_DeactivateHostButtonsOnClientSide()
+    {
+        lobbyPrivacyBtn.gameObject.SetActive(false);
+        lobbyPrivacyText.gameObject.SetActive(false);
+        lobbyCodeText.gameObject.SetActive(false);
+    }
+
     private void Start()
     {
         // Button Listeners:
@@ -48,6 +55,7 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateUpdated += UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayersNames;
+        LobbyEvents.OnJoinedLobby += Lobby_DeactivateHostButtonsOnClientSide;
         //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
     }
 
@@ -65,6 +73,7 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateUpdated -= UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayersNames;
+        LobbyEvents.OnJoinedLobby -= Lobby_DeactivateHostButtonsOnClientSide;
         //LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayerKickButtons;
     }
 
