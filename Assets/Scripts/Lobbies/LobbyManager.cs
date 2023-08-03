@@ -272,7 +272,7 @@ public class LobbyManager : MonoBehaviour
 
         currentLobby = lobbyInstance;
 
-        StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 10f));
+        StartCoroutine(HeartbeatLobbyCoroutine(currentLobby.Id, waitTimeSeconds: 7f));
         //StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
 
         LobbyEvents.OnCreateLobby?.Invoke();
