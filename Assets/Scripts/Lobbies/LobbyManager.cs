@@ -128,6 +128,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateChange += ChangeLobbyPrivacyState;
         LobbyEvents.OnJoiningLobbyByCode += TryCatch_JoinLobbyByCode;
         //LobbyEvents.OnPlayerKicked += TryCatch_KickPlayer;
+        LobbyEvents.OnTriggerLobbyRefresh += HandleLobbyPolling;
     }
 
     private void OnDisable()
@@ -137,16 +138,45 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateChange -= ChangeLobbyPrivacyState;
         LobbyEvents.OnJoiningLobbyByCode -= TryCatch_JoinLobbyByCode;
         //LobbyEvents.OnPlayerKicked -= TryCatch_KickPlayer;
+        LobbyEvents.OnTriggerLobbyRefresh -= HandleLobbyPolling;
     }
 
     #region Lobby_Updates:
 
     private void Update()
     {
-        HandleLobbyPollingNew(); // KICK FUNCTION WORKS! Exception still thrown, need further check & research on solving this.
+        //HandleLobbyPollingOld(); 
     }
 
-    private async void HandleLobbyPollingNew()
+    // KICK FUNCTION WORKS! Exception still thrown, need further check & research on solving this.
+    private async void HandleLobbyPolling()
+    {
+        try
+        {
+            if (IsPlayerInLobby())
+            {
+                Lobby newLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
+                currentLobby = newLobby;
+                LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
+            }
+            else
+            {
+                currentLobby = null;
+                LobbyEvents.OnKickedFromLobby?.Invoke();
+            }
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+            if ((e.Reason == LobbyExceptionReason.Forbidden || e.Reason == LobbyExceptionReason.LobbyNotFound))
+            {
+                currentLobby = null;
+                LobbyEvents.OnKickedFromLobby?.Invoke();
+            }
+        }
+    }
+
+    private async void HandleLobbyPollingOld()
     {
         if (currentLobby != null)
         {
