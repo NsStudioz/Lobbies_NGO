@@ -35,6 +35,9 @@ public class LobbyEvents
     public static KickedFromLobby OnKickedFromLobby;
 
     // Lobby_Update:
+    public delegate void TriggerLobbyRefresh();
+    public static TriggerLobbyRefresh OnTriggerLobbyRefresh;
+
     public delegate void LobbyUpdated(Lobby currentLobby);
     public static LobbyUpdated OnLobbyUpdated;
 
