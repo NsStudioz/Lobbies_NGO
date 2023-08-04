@@ -12,10 +12,14 @@ public class LobbyManagerUI : MonoBehaviour
     [Header("CreateLobbyUI_Buttons")]
     [SerializeField] private Button leaveLobbyBtn;
     [SerializeField] private Button lobbyPrivacyBtn;
+    [SerializeField] private Button nextMapBtn;
+    [SerializeField] private Button previousMapBtn;
+    [SerializeField] private Button startBtn;
 
     [Header("CreateLobbyUI_Texts")]
     [SerializeField] private TMP_Text lobbyPlayerCount;
     [SerializeField] private TMP_Text lobbyPrivacyText;
+    [SerializeField] private TMP_Text lobbyCodeTextNumber;
     [SerializeField] private TMP_Text lobbyCodeText;
 
     private readonly string publicLobby = "PUBLIC";
@@ -34,11 +38,33 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private Button leaveJoinLobbyBtn;
     [SerializeField] private Button JoinLobbyByCodeBtn;
 
-    private void Lobby_DeactivateHostButtonsOnClientSide()
+    // Host Related Elements:
+    private void Lobby_DeactivateHostRelatedElementsOnClientSide()
+    {
+        DeactivateHostRelatedButtons();
+        DeactivateHostsRelatedTexts();
+    }
+
+    private void Lobby_DeactivateHostRelatedKickButtons(Lobby lobby)
+    {
+        if(LobbyManager.Instance.IsLobbyClient())
+            for (int i = 1; i < lobby.MaxPlayers; i++) // lobby.MaxPlayers => currently works, monitoring for possible errors
+                lobbyPlayerDatas[i].DeactivateKickButtons();
+    }
+
+    private void DeactivateHostsRelatedTexts()
+    {
+        lobbyPrivacyText.gameObject.SetActive(false);
+        lobbyCodeTextNumber.gameObject.SetActive(false);
+        lobbyCodeText.gameObject.SetActive(false);
+    }
+
+    private void DeactivateHostRelatedButtons()
     {
         lobbyPrivacyBtn.gameObject.SetActive(false);
-        lobbyPrivacyText.gameObject.SetActive(false);
-        lobbyCodeText.gameObject.SetActive(false);
+        startBtn.gameObject.SetActive(false);
+        previousMapBtn.gameObject.SetActive(false);
+        nextMapBtn.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -55,7 +81,8 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateUpdated += UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayersNames;
-        LobbyEvents.OnJoinedLobby += Lobby_DeactivateHostButtonsOnClientSide;
+        LobbyEvents.OnLobbyUpdated += Lobby_DeactivateHostRelatedKickButtons;
+        LobbyEvents.OnJoinedLobby += Lobby_DeactivateHostRelatedElementsOnClientSide;
         //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
     }
 
@@ -73,7 +100,7 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateUpdated -= UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
         LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayersNames;
-        LobbyEvents.OnJoinedLobby -= Lobby_DeactivateHostButtonsOnClientSide;
+        LobbyEvents.OnJoinedLobby -= Lobby_DeactivateHostRelatedElementsOnClientSide;
         //LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayerKickButtons;
     }
 
@@ -119,7 +146,7 @@ public class LobbyManagerUI : MonoBehaviour
     // Lobby Code:
     private void UpdateLobbyCodeText(string lobbyCode)
     {
-        lobbyCodeText.text = lobbyCode;
+        lobbyCodeTextNumber.text = lobbyCode;
     }
 
 
