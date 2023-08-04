@@ -4825,9 +4825,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leaveLobbyBtn: {fileID: 451147566}
   lobbyPrivacyBtn: {fileID: 261562647}
+  nextMapBtn: {fileID: 388339957}
+  previousMapBtn: {fileID: 522767172}
+  startBtn: {fileID: 1333348954}
+  kickBtnArray:
+  - {fileID: 1649842433}
+  - {fileID: 38738563}
+  - {fileID: 1335053389}
   lobbyPlayerCount: {fileID: 1806872001}
   lobbyPrivacyText: {fileID: 1161894003}
-  lobbyCodeText: {fileID: 432955112}
+  lobbyCodeTextNumber: {fileID: 432955112}
+  lobbyCodeText: {fileID: 1917512394}
   lobbyPlayerDatas:
   - {fileID: 1080865432}
   - {fileID: 1437264428}
