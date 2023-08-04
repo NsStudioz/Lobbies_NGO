@@ -38,35 +38,6 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private Button leaveJoinLobbyBtn;
     [SerializeField] private Button JoinLobbyByCodeBtn;
 
-    // Host Related Elements:
-    private void Lobby_DeactivateHostRelatedElementsOnClientSide()
-    {
-        DeactivateHostRelatedButtons();
-        DeactivateHostsRelatedTexts();
-    }
-
-    private void Lobby_DeactivateHostRelatedKickButtons(Lobby lobby)
-    {
-        if(LobbyManager.Instance.IsLobbyClient())
-            for (int i = 1; i < lobby.MaxPlayers; i++) // lobby.MaxPlayers => currently works, monitoring for possible errors
-                lobbyPlayerDatas[i].DeactivateKickButtons();
-    }
-
-    private void DeactivateHostsRelatedTexts()
-    {
-        lobbyPrivacyText.gameObject.SetActive(false);
-        lobbyCodeTextNumber.gameObject.SetActive(false);
-        lobbyCodeText.gameObject.SetActive(false);
-    }
-
-    private void DeactivateHostRelatedButtons()
-    {
-        lobbyPrivacyBtn.gameObject.SetActive(false);
-        startBtn.gameObject.SetActive(false);
-        previousMapBtn.gameObject.SetActive(false);
-        nextMapBtn.gameObject.SetActive(false);
-    }
-
     private void Start()
     {
         // Button Listeners:
@@ -76,13 +47,14 @@ public class LobbyManagerUI : MonoBehaviour
         JoinLobbyByCodeBtn.onClick.AddListener(Event_OnJoiningLobbyByCode);
 
         // Events:
-        LobbyEvents.OnCreateLobby += InitializeLobbyPrivacyStateToPrivate;
-        LobbyEvents.OnLobbyCreated += UpdateLobbyCodeText;
-        LobbyEvents.OnLobbyPrivacyStateUpdated += UpdateLobbyPrivacyText;
-        LobbyEvents.OnLobbyUpdated += UpdateTotalPlayersInLobbyText;
-        LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayersNames;
-        LobbyEvents.OnLobbyUpdated += Lobby_DeactivateHostRelatedKickButtons;
+        LobbyEvents.OnCreateLobby += Lobby_InitializePrivacyStateToPrivate;
+        LobbyEvents.OnLobbyCreated += Lobby_UpdateCodeNumberText;
+        LobbyEvents.OnLobbyPrivacyStateUpdated += Lobby_UpdateLobbyPrivacyText;
+        LobbyEvents.OnLobbyUpdated += Lobby_UpdateLobby;
         LobbyEvents.OnJoinedLobby += Lobby_DeactivateHostRelatedElementsOnClientSide;
+        //LobbyEvents.OnLobbyUpdated += Lobby_UpdateLobbyPlayerCountText;
+        //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayersNames;
+        //LobbyEvents.OnLobbyUpdated += Lobby_DeactivateHostRelatedKickButtons;
         //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
     }
 
@@ -95,17 +67,27 @@ public class LobbyManagerUI : MonoBehaviour
         JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
 
         // Events:
-        LobbyEvents.OnCreateLobby -= InitializeLobbyPrivacyStateToPrivate;
-        LobbyEvents.OnLobbyCreated -= UpdateLobbyCodeText;
-        LobbyEvents.OnLobbyPrivacyStateUpdated -= UpdateLobbyPrivacyText;
-        LobbyEvents.OnLobbyUpdated -= UpdateTotalPlayersInLobbyText;
-        LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayersNames;
+        LobbyEvents.OnCreateLobby -= Lobby_InitializePrivacyStateToPrivate;
+        LobbyEvents.OnLobbyCreated -= Lobby_UpdateCodeNumberText;
+        LobbyEvents.OnLobbyPrivacyStateUpdated -= Lobby_UpdateLobbyPrivacyText;
+        LobbyEvents.OnLobbyUpdated -= Lobby_UpdateLobby;
         LobbyEvents.OnJoinedLobby -= Lobby_DeactivateHostRelatedElementsOnClientSide;
+        //LobbyEvents.OnLobbyUpdated -= Lobby_UpdateLobbyPlayerCountText;
+        //LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayersNames;
+        //LobbyEvents.OnLobbyUpdated -= Lobby_DeactivateHostRelatedKickButtons;
         //LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayerKickButtons;
     }
 
 
     #region CreateLobby_Functions:
+
+    private void Lobby_UpdateLobby(Lobby lobby)
+    {
+        Lobby_UpdateLobbyPlayerCountText(lobby);
+        Lobby_SyncPlayersNames(lobby);
+        Lobby_SyncPlayerKickButtons(lobby);
+        Lobby_DeactivateHostRelatedKickButtons(lobby);
+    }
 
     private void Event_OnLeaveLobby()
     {
@@ -113,14 +95,6 @@ public class LobbyManagerUI : MonoBehaviour
     }
 
     // Lobby Privacy:
-    private void InitializeLobbyPrivacyStateToPrivate()
-    {
-        if (!isPrivate)
-             isPrivate = true;
-
-        UpdateLobbyPrivacyText(isPrivate);
-    }
-
     private void Event_OnLobbyPrivacyStateChange()
     {
         isPrivate = !isPrivate;
@@ -128,7 +102,15 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateChange?.Invoke(isPrivate);
     }
 
-    private void UpdateLobbyPrivacyText(bool state)
+    private void Lobby_InitializePrivacyStateToPrivate()
+    {
+        if (!isPrivate)
+             isPrivate = true;
+
+        Lobby_UpdateLobbyPrivacyText(isPrivate);
+    }
+
+    private void Lobby_UpdateLobbyPrivacyText(bool state)
     {
         if (state)
             lobbyPrivacyText.text = privateLobby;
@@ -138,13 +120,13 @@ public class LobbyManagerUI : MonoBehaviour
 
 
     // Player Count:
-    private void UpdateTotalPlayersInLobbyText(Lobby currentLobby)
+    private void Lobby_UpdateLobbyPlayerCountText(Lobby lobby)
     {
-        lobbyPlayerCount.text = currentLobby.Players.Count.ToString() + "/" + currentLobby.MaxPlayers.ToString();
+        lobbyPlayerCount.text = lobby.Players.Count.ToString() + "/" + lobby.MaxPlayers.ToString();
     }
 
     // Lobby Code:
-    private void UpdateLobbyCodeText(string lobbyCode)
+    private void Lobby_UpdateCodeNumberText(string lobbyCode)
     {
         lobbyCodeTextNumber.text = lobbyCode;
     }
@@ -157,7 +139,7 @@ public class LobbyManagerUI : MonoBehaviour
         Lobby_ClearPlayerNames(lobby);
         Lobby_UpdatePlayerNames(lobby);
         // needs better placement:
-        Lobby_SyncPlayerKickButtons(lobby);
+        //Lobby_SyncPlayerKickButtons(lobby);
     }
 
     private void Lobby_SortPlayersList(Lobby lobby)
@@ -183,7 +165,7 @@ public class LobbyManagerUI : MonoBehaviour
             lobbyPlayerDatas[i].UpdatePlayerName(lobbyPlayers[i]);
     }
 
-    // Lobby Kick Buttons:
+    // Lobby Host Kick Buttons:
     private void Lobby_SyncPlayerKickButtons(Lobby lobby)
     {
         Lobby_DeactivatePlayerKickButtons(lobby);
@@ -200,6 +182,35 @@ public class LobbyManagerUI : MonoBehaviour
     {
         for (int i = 1; i < lobby.Players.Count; i++)
             lobbyPlayerDatas[i].ActivateKickButtons();
+    }
+
+    // Client Limitations:
+    private void Lobby_DeactivateHostRelatedElementsOnClientSide()
+    {
+        DeactivateHostRelatedButtons();
+        DeactivateHostsRelatedTexts();
+    }
+
+    private void Lobby_DeactivateHostRelatedKickButtons(Lobby lobby)
+    {
+        if (LobbyManager.Instance.IsLobbyClient())
+            for (int i = 1; i < lobby.MaxPlayers; i++) // lobby.MaxPlayers => currently works, monitoring for possible errors
+                lobbyPlayerDatas[i].DeactivateKickButtons();
+    }
+
+    private void DeactivateHostsRelatedTexts()
+    {
+        lobbyPrivacyText.gameObject.SetActive(false);
+        lobbyCodeTextNumber.gameObject.SetActive(false);
+        lobbyCodeText.gameObject.SetActive(false);
+    }
+
+    private void DeactivateHostRelatedButtons()
+    {
+        lobbyPrivacyBtn.gameObject.SetActive(false);
+        startBtn.gameObject.SetActive(false);
+        previousMapBtn.gameObject.SetActive(false);
+        nextMapBtn.gameObject.SetActive(false);
     }
 
     #endregion
