@@ -11,10 +11,8 @@ using static LobbyEvents;
 
 public class LobbyPlayerData : MonoBehaviour
 {
-    //public static event Action OnPlayerAvatarChoosed;
 
-    [SerializeField] private Image playerAvatar;
-    [SerializeField] private Button choosePlayerAvatar;
+    [SerializeField] private Image playerAvatar = null;
     [SerializeField] private TextMeshProUGUI playerName;
     private readonly string emptyPlayerName = "<EMPTY SLOT>";
     [SerializeField] private Button kickPlayerBtn;
@@ -26,13 +24,6 @@ public class LobbyPlayerData : MonoBehaviour
         ResetPlayerNameText();
 
         kickPlayerBtn.onClick.AddListener(KickThisPlayer);
-        choosePlayerAvatar.onClick.AddListener(ChoosePlayerAvatar);
-    }
-
-    private void ChoosePlayerAvatar()
-    {
-        if (player.Id != null && player.Id == AuthenticationService.Instance.PlayerId)
-            OnChoosePlayerAvatar?.Invoke();
     }
 
 
