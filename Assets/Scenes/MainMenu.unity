@@ -5257,11 +5257,11 @@ MonoBehaviour:
   startBtn: {fileID: 1333348954}
   playerAvatarPanel: {fileID: 1615822848}
   avatarArrayBtn:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 299673731}
+  - {fileID: 283364423}
+  - {fileID: 289802028}
+  - {fileID: 1604704500}
+  - {fileID: 1946044434}
   chooseAvatar: {fileID: 2128355807}
   lobbyPlayerCount: {fileID: 1806872001}
   lobbyPrivacyText: {fileID: 1161894003}
@@ -5825,8 +5825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5362393a47a234343b4154e0b5d3ea9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAvatar: {fileID: 0}
-  choosePlayerAvatar: {fileID: 0}
+  playerAvatar: {fileID: 1143216286}
   playerName: {fileID: 1526258927}
   kickPlayerBtn: {fileID: 1779010989}
 --- !u!1 &1081466905
@@ -5982,7 +5981,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1106911341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7487,7 +7486,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1314085121
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7983,8 +7982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5362393a47a234343b4154e0b5d3ea9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAvatar: {fileID: 0}
-  choosePlayerAvatar: {fileID: 0}
+  playerAvatar: {fileID: 768713108}
   playerName: {fileID: 251893743}
   kickPlayerBtn: {fileID: 1649842433}
 --- !u!1 &1448117184
@@ -9487,8 +9485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5362393a47a234343b4154e0b5d3ea9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAvatar: {fileID: 0}
-  choosePlayerAvatar: {fileID: 0}
+  playerAvatar: {fileID: 1984599882}
   playerName: {fileID: 227301948}
   kickPlayerBtn: {fileID: 38738563}
 --- !u!1 &1649842431
@@ -10965,8 +10962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5362393a47a234343b4154e0b5d3ea9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAvatar: {fileID: 0}
-  choosePlayerAvatar: {fileID: 0}
+  playerAvatar: {fileID: 1555362084}
   playerName: {fileID: 1563697775}
   kickPlayerBtn: {fileID: 1335053389}
 --- !u!1 &1906747353
