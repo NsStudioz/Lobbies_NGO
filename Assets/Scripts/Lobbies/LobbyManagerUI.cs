@@ -16,6 +16,11 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private Button previousMapBtn;
     [SerializeField] private Button startBtn;
 
+    [Header("CreateLobbyUI_PlayerAvatar UI")]
+    [SerializeField] private GameObject playerAvatarPanel;
+    [SerializeField] private Button[] avatarArrayBtn;
+    [SerializeField] private Button confirmAvatar;
+
     [Header("CreateLobbyUI_Texts")]
     [SerializeField] private TMP_Text lobbyPlayerCount;
     [SerializeField] private TMP_Text lobbyPrivacyText;
@@ -57,6 +62,8 @@ public class LobbyManagerUI : MonoBehaviour
         //LobbyEvents.OnLobbyUpdated += Lobby_DeactivateHostRelatedKickButtons;
         //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
     }
+
+
 
     private void OnDisable()
     {
