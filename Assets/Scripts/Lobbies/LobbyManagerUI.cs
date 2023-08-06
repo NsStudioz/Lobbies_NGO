@@ -151,7 +151,7 @@ public class LobbyManagerUI : MonoBehaviour
     private void Lobby_SyncPlayerAvatars(Lobby lobby)
     {
         for (int i = 0; i < lobby.Players.Count; i++)
-            lobbyPlayerDatas[i].UpdatePlayerAvatar(lobby.Players[i]);
+            lobbyPlayerDatas[i].UpdatePlayerAvatar(lobbyPlayers[i]);
     }
 
     private void Event_OnLeaveLobby()
