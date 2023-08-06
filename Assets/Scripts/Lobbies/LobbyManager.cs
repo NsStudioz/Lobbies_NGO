@@ -352,6 +352,33 @@ public class LobbyManager : MonoBehaviour
     #endregion
 
 
+    #region Player_modifications:
+
+    private async void TryCatch_UpdatePlayerAvatar(PlayerAvatarEnum playerAvatar)
+    {
+        await CurrentLobbyCheck_TryCatchAsyncBool(UpdatePlayerAvatar(playerAvatar));
+    }
+
+    private async Task UpdatePlayerAvatar(PlayerAvatarEnum playerAvatar)
+    {
+        UpdatePlayerOptions options = new UpdatePlayerOptions();
+
+        options.Data = new Dictionary<string, PlayerDataObject>()
+        {
+            { KEY_PLAYER_AVATAR, new PlayerDataObject(
+                                visibility: PlayerDataObject.VisibilityOptions.Member, 
+                                value: playerAvatar.ToString()) }
+        };
+
+        string playerId = AuthenticationService.Instance.PlayerId;
+
+        Lobby newLobby = await LobbyService.Instance.UpdatePlayerAsync(currentLobby.Id, playerId, options);
+        currentLobby = newLobby;
+    }
+
+    #endregion
+
+
     #region Lobby_Exit_Handling:
 
     private async void LeaveCurrentLobby()
