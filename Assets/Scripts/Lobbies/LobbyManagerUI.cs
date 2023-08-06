@@ -50,6 +50,7 @@ public class LobbyManagerUI : MonoBehaviour
         leaveJoinLobbyBtn.onClick.AddListener(Event_OnLeaveJoinLobbyUI);
         lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
         JoinLobbyByCodeBtn.onClick.AddListener(Event_OnJoiningLobbyByCode);
+        InitializeAvatarArrayButtonListeners();
 
         // Events:
         LobbyEvents.OnCreateLobby += Lobby_InitializePrivacyStateToPrivate;
@@ -61,9 +62,55 @@ public class LobbyManagerUI : MonoBehaviour
         //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayersNames;
         //LobbyEvents.OnLobbyUpdated += Lobby_DeactivateHostRelatedKickButtons;
         //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
+        LobbyEvents.OnChoosePlayerAvatar += OpenPlayerAvatarPanelUI;
     }
 
+    private void OpenPlayerAvatarPanelUI()
+    {
+        playerAvatarPanel.SetActive(true);
+    }
 
+    private void ClosePlayerAvatarPanelUI()
+    {
+        playerAvatarPanel.SetActive(false);
+    }
+
+    private void RemoveAvatarArrayButtonListeners()
+    {
+        for(int i = 0; i < avatarArrayBtn.Length; i++)
+            avatarArrayBtn[i].onClick.RemoveAllListeners();
+    }
+
+    private void InitializeAvatarArrayButtonListeners()
+    {
+        for (int i = 0; i < avatarArrayBtn.Length; i++)
+        {
+            avatarArrayBtn[i].onClick.AddListener(() =>
+            {
+                SetNewPlayerAvatar(i);
+                ClosePlayerAvatarPanelUI();
+            });
+        }
+    }
+
+    private void SetNewPlayerAvatar(int index)
+    {
+        switch (index)
+        {
+            case 0:  LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Heart);
+                break;
+            case 1:  LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Diamond);
+                break;
+            case 2:  LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Gold);
+                break;
+            case 3:  LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Star);
+                break;
+            case 4:  LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Lightning);
+                break;
+            default:
+                break;
+        }
+    }
 
     private void OnDisable()
     {
@@ -72,6 +119,7 @@ public class LobbyManagerUI : MonoBehaviour
         leaveJoinLobbyBtn.onClick.RemoveAllListeners();
         lobbyPrivacyBtn.onClick.RemoveAllListeners();
         JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
+        RemoveAvatarArrayButtonListeners();
 
         // Events:
         LobbyEvents.OnCreateLobby -= Lobby_InitializePrivacyStateToPrivate;
@@ -83,6 +131,7 @@ public class LobbyManagerUI : MonoBehaviour
         //LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayersNames;
         //LobbyEvents.OnLobbyUpdated -= Lobby_DeactivateHostRelatedKickButtons;
         //LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayerKickButtons;
+        LobbyEvents.OnChoosePlayerAvatar -= OpenPlayerAvatarPanelUI;
     }
 
 
