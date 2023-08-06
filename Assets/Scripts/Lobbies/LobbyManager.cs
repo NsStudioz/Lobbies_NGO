@@ -140,6 +140,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnJoiningLobbyByCode += TryCatch_JoinLobbyByCode;
         //LobbyEvents.OnPlayerKicked += TryCatch_KickPlayer;
         LobbyEvents.OnTriggerLobbyRefresh += HandleLobbyPolling;
+        LobbyEvents.OnPlayerAvatarConfirmed += TryCatch_UpdatePlayerAvatar;
     }
 
     private void OnDisable()
@@ -150,6 +151,8 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnJoiningLobbyByCode -= TryCatch_JoinLobbyByCode;
         //LobbyEvents.OnPlayerKicked -= TryCatch_KickPlayer;
         LobbyEvents.OnTriggerLobbyRefresh -= HandleLobbyPolling;
+        LobbyEvents.OnPlayerAvatarConfirmed -= TryCatch_UpdatePlayerAvatar;
+
     }
 
     #region Lobby_Updates:
