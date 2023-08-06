@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 using TMPro;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 
 public class LobbyPlayerData : MonoBehaviour
 {
-    [SerializeField] private Sprite playerAvatar;
+    [SerializeField] private Image playerAvatar;
     [SerializeField] private TextMeshProUGUI playerName;
     private readonly string emptyPlayerName = "<EMPTY SLOT>";
     [SerializeField] private Button kickPlayerBtn;
@@ -37,6 +38,16 @@ public class LobbyPlayerData : MonoBehaviour
     {
         this.player = player;
         playerName.text = this.player.Data[LobbyManager.KEY_PLAYER_NAME].Value;
+    }
+
+    public void UpdatePlayerAvatar(Player player)
+    {
+        this.player = player;
+        // Convert enum type to string.
+        LobbyManager.PlayerAvatarEnum playerAvatar = 
+                    Enum.Parse<LobbyManager.PlayerAvatarEnum>(player.Data[LobbyManager.KEY_PLAYER_AVATAR].Value);
+
+        this.playerAvatar.sprite = PlayerAvatar.Instance.GetSprite(playerAvatar);
     }
 
     public void DeactivateKickButtons()
