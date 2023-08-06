@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class LobbyPlayerData : MonoBehaviour
 {
     [SerializeField] private Image playerAvatar;
+    [SerializeField] private Button choosePlayerAvatar;
     [SerializeField] private TextMeshProUGUI playerName;
     private readonly string emptyPlayerName = "<EMPTY SLOT>";
     [SerializeField] private Button kickPlayerBtn;
@@ -21,7 +22,10 @@ public class LobbyPlayerData : MonoBehaviour
         ResetPlayerNameText();
 
         kickPlayerBtn.onClick.AddListener(KickThisPlayer);
+
     }
+
+
 
     private void OnDisable()
     {
