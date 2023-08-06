@@ -17,7 +17,8 @@ public class LobbyManager : MonoBehaviour
 
     private Lobby currentLobby;
 
-    public const string KEY_PLAYER_NAME = "PlayerName";
+    public const string KEY_PLAYER_NAME = "PlayerName"; // this is a dictionary key! not a value!
+    public const string KEY_PLAYER_AVATAR = "Avatar";   // this is a dictionary key! not a value!
     private string playerName = "";
     private readonly int MAX_PLAYERS = 4;
 
@@ -115,6 +116,15 @@ public class LobbyManager : MonoBehaviour
     }
 
     #endregion
+
+    public enum PlayerAvatarEnum
+    { 
+        Heart,
+        Diamond,
+        Gold,
+        Star,
+        Lightning
+    }
 
     private void Awake()
     {
