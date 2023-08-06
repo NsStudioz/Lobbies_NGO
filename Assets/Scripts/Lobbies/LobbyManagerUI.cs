@@ -50,6 +50,7 @@ public class LobbyManagerUI : MonoBehaviour
         leaveJoinLobbyBtn.onClick.AddListener(Event_OnLeaveJoinLobbyUI);
         lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
         JoinLobbyByCodeBtn.onClick.AddListener(Event_OnJoiningLobbyByCode);
+        chooseAvatar.onClick.AddListener(OpenPlayerAvatarPanelUI);
         InitializeAvatarArrayButtonListeners();
 
         // Events:
@@ -119,6 +120,7 @@ public class LobbyManagerUI : MonoBehaviour
         leaveJoinLobbyBtn.onClick.RemoveAllListeners();
         lobbyPrivacyBtn.onClick.RemoveAllListeners();
         JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
+        chooseAvatar.onClick.RemoveAllListeners();
         RemoveAvatarArrayButtonListeners();
 
         // Events:
