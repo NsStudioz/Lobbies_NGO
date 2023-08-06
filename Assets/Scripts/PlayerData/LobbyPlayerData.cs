@@ -7,10 +7,11 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Services.Authentication;
+using static LobbyEvents;
 
 public class LobbyPlayerData : MonoBehaviour
 {
-    public static event Action OnPlayerAvatarChoosed;
+    //public static event Action OnPlayerAvatarChoosed;
 
     [SerializeField] private Image playerAvatar;
     [SerializeField] private Button choosePlayerAvatar;
@@ -31,7 +32,7 @@ public class LobbyPlayerData : MonoBehaviour
     private void ChoosePlayerAvatar()
     {
         if (player.Id != null && player.Id == AuthenticationService.Instance.PlayerId)
-            OnPlayerAvatarChoosed?.Invoke();
+            OnChoosePlayerAvatar?.Invoke();
     }
 
 

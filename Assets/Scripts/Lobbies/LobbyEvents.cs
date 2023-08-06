@@ -51,5 +51,8 @@ public class LobbyEvents
     public delegate void PlayerAvatarUpdate(string playerAvatar);
     public static PlayerAvatarUpdate OnPlayerAvatarUpdate;
 
+    public delegate void PlayerAvatarChoosed();
+    public static PlayerAvatarChoosed OnChoosePlayerAvatar;
+
 
 }
