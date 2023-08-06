@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class LobbyPlayerData : MonoBehaviour
 {
+    [SerializeField] private Sprite playerAvatar;
     [SerializeField] private TextMeshProUGUI playerName;
     private readonly string emptyPlayerName = "<EMPTY SLOT>";
     [SerializeField] private Button kickPlayerBtn;
