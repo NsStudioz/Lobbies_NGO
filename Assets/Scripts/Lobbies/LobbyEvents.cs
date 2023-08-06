@@ -54,5 +54,6 @@ public class LobbyEvents
     public delegate void PlayerAvatarChoosed();
     public static PlayerAvatarChoosed OnChoosePlayerAvatar;
 
-
+    public delegate void PlayerAvatarConfirmed(LobbyManager.PlayerAvatarEnum playerAvatar);
+    public static PlayerAvatarConfirmed OnPlayerAvatarConfirmed;
 }
