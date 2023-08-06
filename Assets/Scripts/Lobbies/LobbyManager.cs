@@ -63,7 +63,8 @@ public class LobbyManager : MonoBehaviour
     private async Task<Player> GetPlayer()
     {
         return new Player(AuthenticationService.Instance.PlayerId, null, new Dictionary<string, PlayerDataObject> {
-            { KEY_PLAYER_NAME, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, await GetPlayerName()) }
+            { KEY_PLAYER_NAME, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, await GetPlayerName()) },
+            { KEY_PLAYER_AVATAR, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerAvatarEnum.Heart.ToString()) }
         });
     }
 
