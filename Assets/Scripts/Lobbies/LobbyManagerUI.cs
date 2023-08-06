@@ -19,7 +19,7 @@ public class LobbyManagerUI : MonoBehaviour
     [Header("CreateLobbyUI_PlayerAvatar UI")]
     [SerializeField] private GameObject playerAvatarPanel;
     [SerializeField] private Button[] avatarArrayBtn;
-    [SerializeField] private Button confirmAvatar;
+    [SerializeField] private Button chooseAvatar;
 
     [Header("CreateLobbyUI_Texts")]
     [SerializeField] private TMP_Text lobbyPlayerCount;
@@ -143,6 +143,13 @@ public class LobbyManagerUI : MonoBehaviour
         Lobby_SyncPlayersNames(lobby);
         Lobby_SyncPlayerKickButtons(lobby);
         Lobby_DeactivateHostRelatedKickButtons(lobby);
+        Lobby_SyncPlayerAvatars(lobby);
+    }
+
+    private void Lobby_SyncPlayerAvatars(Lobby lobby)
+    {
+        for (int i = 0; i < lobby.Players.Count; i++)
+            lobbyPlayerDatas[i].UpdatePlayerAvatar(lobby.Players[i]);
     }
 
     private void Event_OnLeaveLobby()
