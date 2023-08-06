@@ -13,7 +13,7 @@ public class PlayerAvatar: MonoBehaviour
         Instance = this;
     }
 
-    [SerializeField] private List<Sprite> playerAvatarList = new List<Sprite>(5);
+    [SerializeField] private List<Sprite> playerAvatarList = new List<Sprite>();
     //  0 = Heart, 1 = Diamond, 2 = Gold, 3 = Star, 4 = Lightning
 
     public Sprite GetSprite(LobbyManager.PlayerAvatarEnum playerAvatar)
