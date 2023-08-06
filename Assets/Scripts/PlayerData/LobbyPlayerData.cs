@@ -6,9 +6,12 @@ using TMPro;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Services.Authentication;
 
 public class LobbyPlayerData : MonoBehaviour
 {
+    public static event Action OnPlayerAvatarChoosed;
+
     [SerializeField] private Image playerAvatar;
     [SerializeField] private Button choosePlayerAvatar;
     [SerializeField] private TextMeshProUGUI playerName;
@@ -22,9 +25,14 @@ public class LobbyPlayerData : MonoBehaviour
         ResetPlayerNameText();
 
         kickPlayerBtn.onClick.AddListener(KickThisPlayer);
-
+        choosePlayerAvatar.onClick.AddListener(ChoosePlayerAvatar);
     }
 
+    private void ChoosePlayerAvatar()
+    {
+        if (player.Id != null && player.Id == AuthenticationService.Instance.PlayerId)
+            OnPlayerAvatarChoosed?.Invoke();
+    }
 
 
     private void OnDisable()
