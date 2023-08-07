@@ -11,6 +11,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
+using UnityEngine.SceneManagement;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -336,8 +337,10 @@ public class LobbyManager : MonoBehaviour
         if (IsPlayerInLobby())
             if (IsLobbyHost())
                 await StartGameHost();
-            //else
-                //StartGameClient();
+            else if (IsLobbyClient())
+                await StartGameClient();
+
+        //SceneManager.LoadSceneAsync("DefaultLevel");
     }
 
     private async Task StartGameHost()
@@ -356,6 +359,16 @@ public class LobbyManager : MonoBehaviour
 
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "dtls"));
         NetworkManager.Singleton.StartHost();
+    }
+
+    private async Task StartGameClient()
+    {
+        string relayJoinCode = currentLobby.Data[KEY_RELAY_JOIN_CODE].Value;
+
+        JoinAllocation joinAllocation = await RelayManager.Instance.JoinRelay(relayJoinCode);
+
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
+        NetworkManager.Singleton.StartClient();
     }
 
 
