@@ -5272,6 +5272,7 @@ MonoBehaviour:
   - {fileID: 1437264428}
   - {fileID: 1622232141}
   - {fileID: 1901541689}
+  mapListInt: 00000000010000000200000003000000
   joinLobbyCodeInputField: {fileID: 706637785}
   leaveJoinLobbyBtn: {fileID: 1113039228}
   JoinLobbyByCodeBtn: {fileID: 557369698}
