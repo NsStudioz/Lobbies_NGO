@@ -51,6 +51,7 @@ public class LobbyManagerUI : MonoBehaviour
         lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
         JoinLobbyByCodeBtn.onClick.AddListener(Event_OnJoiningLobbyByCode);
         chooseAvatar.onClick.AddListener(OpenPlayerAvatarPanelUI);
+        startBtn.onClick.AddListener(Event_OnStartGame);
 
         // Events:
         LobbyEvents.OnCreateLobby += Lobby_InitializePrivacyStateToPrivate;
@@ -63,6 +64,11 @@ public class LobbyManagerUI : MonoBehaviour
         //LobbyEvents.OnLobbyUpdated += Lobby_DeactivateHostRelatedKickButtons;
         //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
         LobbyEvents.OnChoosePlayerAvatar += OpenPlayerAvatarPanelUI;
+    }
+
+    private void Event_OnStartGame()
+    {
+        LobbyEvents.OnStartGame?.Invoke();
     }
 
     private void OnEnable()
@@ -132,6 +138,7 @@ public class LobbyManagerUI : MonoBehaviour
         lobbyPrivacyBtn.onClick.RemoveAllListeners();
         JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
         chooseAvatar.onClick.RemoveAllListeners();
+        startBtn.onClick.RemoveAllListeners();
         RemoveAvatarArrayButtonListeners();
 
         // Events:
