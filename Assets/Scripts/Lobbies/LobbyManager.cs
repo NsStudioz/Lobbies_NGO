@@ -29,6 +29,7 @@ public class LobbyManager : MonoBehaviour
 
     // Relay:
     private const string KEY_RELAY_JOIN_CODE = "RelayJoinCode";
+    private string relayJoinCodeValue = "NoCodeYet";
 
     /*    private Coroutine heartbeatCoroutine = null;
         private Coroutine refreshLobbyCoroutine = null;
@@ -149,6 +150,7 @@ public class LobbyManager : MonoBehaviour
         //LobbyEvents.OnPlayerKicked += TryCatch_KickPlayer;
         LobbyEvents.OnTriggerLobbyRefresh += HandleLobbyPolling;
         LobbyEvents.OnPlayerAvatarConfirmed += TryCatch_UpdatePlayerAvatar;
+        LobbyEvents.OnStartGame += StartGame;
     }
 
     private void OnDisable()
@@ -160,6 +162,8 @@ public class LobbyManager : MonoBehaviour
         //LobbyEvents.OnPlayerKicked -= TryCatch_KickPlayer;
         LobbyEvents.OnTriggerLobbyRefresh -= HandleLobbyPolling;
         LobbyEvents.OnPlayerAvatarConfirmed -= TryCatch_UpdatePlayerAvatar;
+        LobbyEvents.OnStartGame -= StartGame;
+
 
     }
 
@@ -186,6 +190,10 @@ public class LobbyManager : MonoBehaviour
                 currentLobby = null;
                 LobbyEvents.OnKickedFromLobby?.Invoke();
             }
+            // Test:
+            if (IsLobbyClient())
+                await StartGameClientOnLobbyUpdated();
+
         }
         catch (LobbyServiceException e)
         {
@@ -288,6 +296,10 @@ public class LobbyManager : MonoBehaviour
         {
             Player = player,
             IsPrivate = true,
+            Data = new Dictionary<string, DataObject>
+            {
+                { KEY_RELAY_JOIN_CODE, new DataObject(DataObject.VisibilityOptions.Member, relayJoinCodeValue) }
+            }
         };
 
         Lobby lobbyInstance = await LobbyService.Instance.CreateLobbyAsync(lobbyName, MAX_PLAYERS ,options);
@@ -334,13 +346,22 @@ public class LobbyManager : MonoBehaviour
 
     private async void StartGame()
     {
-        if (IsPlayerInLobby())
-            if (IsLobbyHost())
-                await StartGameHost();
-            else if (IsLobbyClient())
-                await StartGameClient();
+        if (IsLobbyHost())
+            await StartGameHost();
 
-        //SceneManager.LoadSceneAsync("DefaultLevel");
+        SceneManager.LoadSceneAsync("DefaultLevel");
+    }
+
+    private async Task<bool> StartGameClientOnLobbyUpdated()
+    {
+        if (currentLobby.Data[KEY_RELAY_JOIN_CODE].Value != relayJoinCodeValue)
+        {
+            await StartGameClient();
+            SceneManager.LoadSceneAsync("DefaultLevel");
+            return true;
+        }
+        else
+            return false;
     }
 
     private async Task StartGameHost()
