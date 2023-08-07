@@ -54,6 +54,7 @@ public class LobbyManagerUI : MonoBehaviour
         JoinLobbyByCodeBtn.onClick.AddListener(Event_OnJoiningLobbyByCode);
         chooseAvatar.onClick.AddListener(OpenPlayerAvatarPanelUI);
         startBtn.onClick.AddListener(Event_OnStartGame);
+        nextMapBtn.onClick.AddListener(Lobby_NextMap);
 
         // Events:
         LobbyEvents.OnCreateLobby += Lobby_InitializePrivacyStateToPrivate;
@@ -75,6 +76,15 @@ public class LobbyManagerUI : MonoBehaviour
         return mapIndex;
     }
 
+    private void Lobby_NextMap()
+    {
+        mapIndex++;
+
+        if (mapIndex > mapListInt.Count)
+            mapIndex = 0;
+
+        Debug.Log("MapIndex: " + mapIndex);
+    }
 
     #endregion
 
