@@ -49,5 +49,19 @@ public class RelayManager : MonoBehaviour
         }
     }
 
+    public async Task<JoinAllocation> JoinRelay(string joinCode)
+    {
+        try
+        {
+            JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
+            return joinAllocation;
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.LogException(e);
+
+            return default;
+        }
+    }
 }
