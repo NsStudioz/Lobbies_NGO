@@ -51,7 +51,6 @@ public class LobbyManagerUI : MonoBehaviour
         lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
         JoinLobbyByCodeBtn.onClick.AddListener(Event_OnJoiningLobbyByCode);
         chooseAvatar.onClick.AddListener(OpenPlayerAvatarPanelUI);
-        InitializeAvatarArrayButtonListeners();
 
         // Events:
         LobbyEvents.OnCreateLobby += Lobby_InitializePrivacyStateToPrivate;
@@ -64,6 +63,11 @@ public class LobbyManagerUI : MonoBehaviour
         //LobbyEvents.OnLobbyUpdated += Lobby_DeactivateHostRelatedKickButtons;
         //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
         LobbyEvents.OnChoosePlayerAvatar += OpenPlayerAvatarPanelUI;
+    }
+
+    private void OnEnable()
+    {
+        InitializeAvatarArrayButtonListeners();
     }
 
     private void OpenPlayerAvatarPanelUI()
@@ -86,9 +90,11 @@ public class LobbyManagerUI : MonoBehaviour
     {
         for (int i = 0; i < avatarArrayBtn.Length; i++)
         {
-            avatarArrayBtn[i].onClick.AddListener(() =>
+            int currentIndex = i; // 'i' doesn't work properly as an int parameter passing so we use a new var instead.
+
+            avatarArrayBtn[currentIndex].onClick.AddListener(() =>
             {
-                SetNewPlayerAvatar(i);
+                SetNewPlayerAvatar(currentIndex);
                 ClosePlayerAvatarPanelUI();
             });
         }
@@ -98,15 +104,20 @@ public class LobbyManagerUI : MonoBehaviour
     {
         switch (index)
         {
-            case 0:  LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Heart);
+            case 0:  
+                LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Heart);
                 break;
-            case 1:  LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Diamond);
+            case 1:  
+                LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Diamond);
                 break;
-            case 2:  LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Gold);
+            case 2:  
+                LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Gold);
                 break;
-            case 3:  LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Star);
+            case 3:  
+                LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Star);
                 break;
-            case 4:  LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Lightning);
+            case 4:  
+                LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Lightning);
                 break;
             default:
                 break;
