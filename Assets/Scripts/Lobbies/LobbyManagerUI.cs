@@ -35,6 +35,7 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private List<LobbyPlayerData> lobbyPlayerDatas = new List<LobbyPlayerData>();
     private List<Player> lobbyPlayers = new List<Player>();
     [SerializeField] private List<int> mapListInt = new List<int>();
+    private int mapIndex = 0;
 
     // JoinLobby UI Elements:
     [Header("JoinLobbyUI_Texts")]
@@ -66,6 +67,17 @@ public class LobbyManagerUI : MonoBehaviour
         //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
         LobbyEvents.OnChoosePlayerAvatar += OpenPlayerAvatarPanelUI;
     }
+
+    #region Map_Changes:
+
+    public int GetMapIndex()
+    {
+        return mapIndex;
+    }
+
+
+    #endregion
+
 
     private void Event_OnStartGame()
     {
