@@ -34,6 +34,7 @@ public class LobbyManagerUI : MonoBehaviour
     [Header("CreateLobbyUI_Lists")]
     [SerializeField] private List<LobbyPlayerData> lobbyPlayerDatas = new List<LobbyPlayerData>();
     private List<Player> lobbyPlayers = new List<Player>();
+    [SerializeField] private List<int> mapListInt = new List<int>();
 
     // JoinLobby UI Elements:
     [Header("JoinLobbyUI_Texts")]
