@@ -44,6 +44,11 @@ public class LobbyPlayerData : MonoBehaviour
         playerName.text = this.player.Data[LobbyManager.KEY_PLAYER_NAME].Value;
     }
 
+    public void ResetPlayerAvatar()
+    {
+        this.playerAvatar.sprite = PlayerAvatar.Instance.GetSprite(LobbyManager.PlayerAvatarEnum.Heart);
+    }
+
     public void UpdatePlayerAvatar(Player player)
     {
         this.player = player;
