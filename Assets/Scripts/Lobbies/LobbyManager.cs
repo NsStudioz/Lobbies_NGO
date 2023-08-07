@@ -5,8 +5,12 @@ using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Relay.Models;
+using Unity.Netcode.Transports;
 using UnityEngine;
-
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -21,6 +25,9 @@ public class LobbyManager : MonoBehaviour
     public const string KEY_PLAYER_AVATAR = "Avatar";   // this is a dictionary key! not a value!
     private string playerName = "";
     private readonly int MAX_PLAYERS = 4;
+
+    // Relay:
+    private const string KEY_RELAY_JOIN_CODE = "RelayJoinCode";
 
     /*    private Coroutine heartbeatCoroutine = null;
         private Coroutine refreshLobbyCoroutine = null;
@@ -318,6 +325,39 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
         //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
     }
+
+    #endregion
+
+
+    #region StartGame_Relay:
+
+    private async void StartGame()
+    {
+        if (IsPlayerInLobby())
+            if (IsLobbyHost())
+                await StartGameHost();
+            //else
+                //StartGameClient();
+    }
+
+    private async Task StartGameHost()
+    {
+        Allocation allocation = await RelayManager.Instance.AllocateRelay();
+
+        string relayJoinCode = await RelayManager.Instance.GetRelayJoinCode(allocation);
+
+        await LobbyService.Instance.UpdateLobbyAsync(currentLobby.Id, new UpdateLobbyOptions
+        {
+            Data = new Dictionary<string, DataObject>
+            {
+                { KEY_RELAY_JOIN_CODE, new DataObject(DataObject.VisibilityOptions.Member, relayJoinCode) }
+            }
+        });
+
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "dtls"));
+        NetworkManager.Singleton.StartHost();
+    }
+
 
     #endregion
 
