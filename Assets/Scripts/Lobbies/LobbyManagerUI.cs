@@ -55,6 +55,7 @@ public class LobbyManagerUI : MonoBehaviour
         chooseAvatar.onClick.AddListener(OpenPlayerAvatarPanelUI);
         startBtn.onClick.AddListener(Event_OnStartGame);
         nextMapBtn.onClick.AddListener(Lobby_NextMap);
+        previousMapBtn.onClick.AddListener(Lobby_PreviousMap);
 
         // Events:
         LobbyEvents.OnCreateLobby += Lobby_InitializePrivacyStateToPrivate;
@@ -82,6 +83,16 @@ public class LobbyManagerUI : MonoBehaviour
 
         if (mapIndex > mapListInt.Count)
             mapIndex = 0;
+
+        Debug.Log("MapIndex: " + mapIndex);
+    }
+
+    private void Lobby_PreviousMap()
+    {
+        mapIndex--;
+
+        if (mapIndex < 0)
+            mapIndex = 4;
 
         Debug.Log("MapIndex: " + mapIndex);
     }
@@ -162,6 +173,8 @@ public class LobbyManagerUI : MonoBehaviour
         JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
         chooseAvatar.onClick.RemoveAllListeners();
         startBtn.onClick.RemoveAllListeners();
+        nextMapBtn.onClick.RemoveAllListeners();
+        previousMapBtn.onClick.RemoveAllListeners();
         RemoveAvatarArrayButtonListeners();
 
         // Events:
