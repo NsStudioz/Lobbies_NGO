@@ -56,4 +56,7 @@ public class LobbyEvents
 
     public delegate void PlayerAvatarConfirmed(LobbyManager.PlayerAvatarEnum playerAvatar);
     public static PlayerAvatarConfirmed OnPlayerAvatarConfirmed;
+
+    public delegate void StartGame();
+    public static StartGame OnStartGame;
 }
