@@ -156,7 +156,14 @@ public class LobbyManagerUI : MonoBehaviour
         Lobby_SyncPlayersNames(lobby);
         Lobby_SyncPlayerKickButtons(lobby);
         Lobby_DeactivateHostRelatedKickButtons(lobby);
+        Lobby_ResetPlayerAvatars(lobby);
         Lobby_SyncPlayerAvatars(lobby);
+    }
+
+    private void Lobby_ResetPlayerAvatars(Lobby lobby)
+    {
+        for (int i = 0; i < lobby.MaxPlayers; i++)
+            lobbyPlayerDatas[i].ResetPlayerAvatar();
     }
 
     private void Lobby_SyncPlayerAvatars(Lobby lobby)
