@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class LobbyManagerUI : MonoBehaviour
 {
+    public static LobbyManagerUI Instance;
+
     // CreateLobby UI Elements:
     [Header("CreateLobbyUI_Buttons")]
     [SerializeField] private Button leaveLobbyBtn;
@@ -44,6 +46,11 @@ public class LobbyManagerUI : MonoBehaviour
     [Header("JoinLobbyUI_Buttons")]
     [SerializeField] private Button leaveJoinLobbyBtn;
     [SerializeField] private Button JoinLobbyByCodeBtn;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
