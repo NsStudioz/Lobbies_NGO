@@ -77,6 +77,11 @@ public class LobbyManagerUI : MonoBehaviour
         return mapIndex;
     }
 
+    public string GetMapSceneNameString()
+    {
+        return MapList.Instance.GetMapSceneNameString(GetMapIndex());
+    }
+
     private void Lobby_NextMap()
     {
         mapIndex++;
