@@ -9,6 +9,15 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Scenes/DefaultLevel.unity
-    guid: e533da9b7e55a5946a54c788bd1c9324
+    path: Assets/Scenes/BlueMap.unity
+    guid: c2b368448167a2c49b0cccaf25f43478
+  - enabled: 1
+    path: Assets/Scenes/YellowMap.unity
+    guid: 4de69fdc7c5cc5a4e9a1dd7770efa24e
+  - enabled: 1
+    path: Assets/Scenes/PurpleMap.unity
+    guid: c3a0d773593a4494a8c60b3fc3811046
+  - enabled: 1
+    path: Assets/Scenes/RedMap.unity
+    guid: dd08888a8470a9b4b9a67b898b4e9f59
   m_configObjects: {}
