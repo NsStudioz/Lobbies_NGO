@@ -353,7 +353,8 @@ public class LobbyManager : MonoBehaviour
         if (IsLobbyHost())
             await StartGameHost();
 
-        SceneManager.LoadSceneAsync(LobbyManagerUI.Instance.GetMapSceneNameString());
+        //SceneManager.LoadSceneAsync(LobbyManagerUI.Instance.GetMapSceneNameString());
+        SceneManager.LoadSceneAsync(currentLobby.Data[KEY_LOBBY_MAP].Value);
     }
 
     private async Task<bool> StartGameClientOnLobbyUpdated()
@@ -361,7 +362,7 @@ public class LobbyManager : MonoBehaviour
         if (currentLobby.Data[KEY_RELAY_JOIN_CODE].Value != relayJoinCodeValue)
         {
             await StartGameClient();
-            SceneManager.LoadSceneAsync(LobbyManagerUI.Instance.GetMapSceneNameString());
+            SceneManager.LoadSceneAsync(currentLobby.Data[KEY_LOBBY_MAP].Value);
             return true;
         }
         else
