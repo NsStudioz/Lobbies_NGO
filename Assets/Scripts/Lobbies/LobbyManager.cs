@@ -151,6 +151,7 @@ public class LobbyManager : MonoBehaviour
         //LobbyEvents.OnPlayerKicked += TryCatch_KickPlayer;
         LobbyEvents.OnTriggerLobbyRefresh += HandleLobbyPolling;
         LobbyEvents.OnPlayerAvatarConfirmed += TryCatch_UpdatePlayerAvatar;
+        LobbyEvents.OnLobbyMapChange += TryCatch_UpdateLobbyMap;
         LobbyEvents.OnStartGame += StartGame;
     }
 
@@ -163,6 +164,7 @@ public class LobbyManager : MonoBehaviour
         //LobbyEvents.OnPlayerKicked -= TryCatch_KickPlayer;
         LobbyEvents.OnTriggerLobbyRefresh -= HandleLobbyPolling;
         LobbyEvents.OnPlayerAvatarConfirmed -= TryCatch_UpdatePlayerAvatar;
+        LobbyEvents.OnLobbyMapChange -= TryCatch_UpdateLobbyMap;
         LobbyEvents.OnStartGame -= StartGame;
 
 
@@ -300,7 +302,7 @@ public class LobbyManager : MonoBehaviour
             Data = new Dictionary<string, DataObject>
             {
                 { KEY_RELAY_JOIN_CODE, new DataObject(DataObject.VisibilityOptions.Member, relayJoinCodeValue) },
-                { KEY_LOBBY_MAP, new DataObject(DataObject.VisibilityOptions.Member, LobbyManagerUI.Instance.GetMapIndex().ToString()) }
+                { KEY_LOBBY_MAP, new DataObject(DataObject.VisibilityOptions.Member, LobbyManagerUI.Instance.GetMapSceneNameString()) }
             }
         };
 
@@ -426,6 +428,24 @@ public class LobbyManager : MonoBehaviour
     private async Task KickPlayer(string playerId)
     {
         await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, playerId);
+    }
+
+    private async void TryCatch_UpdateLobbyMap(string mapName)
+    {
+        await TryCatchAsyncBool(UpdateLobbyMap(mapName));
+    }
+
+    private async Task UpdateLobbyMap(string mapName)
+    {
+        Lobby newLobby = await Lobbies.Instance.UpdateLobbyAsync(currentLobby.Id, new UpdateLobbyOptions
+        {
+            Data = new Dictionary<string, DataObject>
+            {
+                 { KEY_LOBBY_MAP, new DataObject(DataObject.VisibilityOptions.Member, mapName) }
+            }
+        });
+
+        currentLobby = newLobby;
     }
 
     #endregion
