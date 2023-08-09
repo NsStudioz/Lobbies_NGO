@@ -47,6 +47,9 @@ public class LobbyEvents
     public delegate void LobbyPrivacyStateUpdated(bool state);
     public static LobbyPrivacyStateUpdated OnLobbyPrivacyStateUpdated;
 
+    public delegate void LobbyMapChange(string mapName);
+    public static LobbyMapChange OnLobbyMapChange;
+
     // Player_Update:
     public delegate void PlayerAvatarUpdate(string playerAvatar);
     public static PlayerAvatarUpdate OnPlayerAvatarUpdate;
