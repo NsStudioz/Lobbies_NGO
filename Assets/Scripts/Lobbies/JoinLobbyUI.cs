@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,6 +15,23 @@ public class JoinLobbyUI : MonoBehaviour
     [SerializeField] private List<TMP_Text> lobbyPlayers = new List<TMP_Text>(); // Available players in public lobby.
 
     [SerializeField] private Button lobbyListRefreshBtn;
-    [SerializeField] private TMP_Text lobbyListRefreshText;
+    [SerializeField] private TMP_Text lobbyListRefreshText; // Remove soon, dont need!
+
+    private void OnEnable()
+    {
+        lobbyListRefreshBtn.onClick.AddListener(Event_OnTriggerLobbyListRefresh);
+    }
+
+    private void OnDisable()
+    {
+        lobbyListRefreshBtn.onClick.RemoveAllListeners();
+    }
+
+    private void Event_OnTriggerLobbyListRefresh()
+    {
+        LobbyEvents.OnTriggerLobbyListRefresh?.Invoke();
+    }
+
+
 
 }
