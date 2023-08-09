@@ -156,6 +156,8 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnPlayerAvatarConfirmed += TryCatch_UpdatePlayerAvatar;
         LobbyEvents.OnLobbyMapChange += TryCatch_UpdateLobbyMap;
         LobbyEvents.OnStartGame += StartGame;
+        LobbyEvents.OnTriggerLobbyListRefresh += TryCatch_RefreshlobbyList;
+
     }
 
     private void OnDisable()
@@ -169,7 +171,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnPlayerAvatarConfirmed -= TryCatch_UpdatePlayerAvatar;
         LobbyEvents.OnLobbyMapChange -= TryCatch_UpdateLobbyMap;
         LobbyEvents.OnStartGame -= StartGame;
-
+        LobbyEvents.OnTriggerLobbyListRefresh -= TryCatch_RefreshlobbyList;
 
     }
 
@@ -345,6 +347,38 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
         //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
     }
+
+    private async void TryCatch_RefreshlobbyList()
+    {
+        await TryCatchAsyncBool(RefreshlobbyList());
+    }
+
+    private async Task RefreshlobbyList()
+    {
+        QueryLobbiesOptions options = new QueryLobbiesOptions();
+        options.Count = 5;
+
+        // Filter for open lobbies:
+        options.Filters = new List<QueryFilter>
+        {
+            new QueryFilter(field: QueryFilter.FieldOptions.AvailableSlots,
+                            op: QueryFilter.OpOptions.GT,
+                            value: "0")       
+        };
+
+        options.Order = new List<QueryOrder>
+        {
+            new QueryOrder(asc: false,
+                           field: QueryOrder.FieldOptions.Created)
+        };
+
+        QueryResponse lobbyListQueryResponse = await Lobbies.Instance.QueryLobbiesAsync(options);
+
+        lobbyList = lobbyListQueryResponse.Results;
+
+        LobbyEvents.OnLobbyListChange?.Invoke(lobbyList);
+    }
+
 
     #endregion
 
