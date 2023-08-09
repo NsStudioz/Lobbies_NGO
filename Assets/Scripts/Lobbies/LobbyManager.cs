@@ -24,6 +24,7 @@ public class LobbyManager : MonoBehaviour
 
     public const string KEY_PLAYER_NAME = "PlayerName"; // this is a dictionary key! not a value!
     public const string KEY_PLAYER_AVATAR = "Avatar";   // this is a dictionary key! not a value!
+    private const string KEY_LOBBY_MAP = "LobbyMap";
     private string playerName = "";
     private readonly int MAX_PLAYERS = 4;
 
@@ -298,7 +299,8 @@ public class LobbyManager : MonoBehaviour
             IsPrivate = true,
             Data = new Dictionary<string, DataObject>
             {
-                { KEY_RELAY_JOIN_CODE, new DataObject(DataObject.VisibilityOptions.Member, relayJoinCodeValue) }
+                { KEY_RELAY_JOIN_CODE, new DataObject(DataObject.VisibilityOptions.Member, relayJoinCodeValue) },
+                { KEY_LOBBY_MAP, new DataObject(DataObject.VisibilityOptions.Member, LobbyManagerUI.Instance.GetMapIndex().ToString()) }
             }
         };
 
