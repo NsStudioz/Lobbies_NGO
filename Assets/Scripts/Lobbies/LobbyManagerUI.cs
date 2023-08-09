@@ -94,10 +94,12 @@ public class LobbyManagerUI : MonoBehaviour
     {
         mapIndex++;
 
-        if (mapIndex > mapListInt.Count)
+        if (mapIndex >= mapListInt.Count)
             mapIndex = 0;
 
         Debug.Log("MapIndex: " + mapIndex);
+
+        Lobby_SetMapName();
     }
 
     private void Lobby_PreviousMap()
@@ -105,11 +107,17 @@ public class LobbyManagerUI : MonoBehaviour
         mapIndex--;
 
         if (mapIndex < 0)
-            mapIndex = 4;
+            mapIndex = 3;
 
         Debug.Log("MapIndex: " + mapIndex);
+
+        Lobby_SetMapName();
     }
 
+    private void Lobby_SetMapName()
+    {
+        mapNameText.text = GetMapSceneNameString();
+    }
 
     #endregion
 
