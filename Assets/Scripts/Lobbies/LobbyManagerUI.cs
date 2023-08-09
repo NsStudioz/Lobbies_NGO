@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +31,7 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private TMP_Text lobbyCodeTextNumber;
     [SerializeField] private TMP_Text lobbyCodeText;
     [SerializeField] private TMP_Text mapNameText;
+    [SerializeField] private Image mapImage;
 
     private readonly string publicLobby = "PUBLIC";
     private readonly string privateLobby = "PRIVATE";
@@ -121,6 +124,27 @@ public class LobbyManagerUI : MonoBehaviour
     private void Lobby_SetMapName(Lobby lobby)
     {
         mapNameText.text = lobby.Data[key: "LobbyMap"].Value;
+    }
+
+    private void Lobby_SetMapImage(Lobby lobby)
+    {
+        string mapName = lobby.Data[key: "LobbyMap"].Value;
+
+        switch (mapName)
+        {
+            case "BlueMap":
+                mapImage.color = Color.blue;
+                break;
+            case "YellowMap":
+                mapImage.color = Color.yellow;
+                break;
+            case "PurpleMap":
+                mapImage.color = new Color(208, 0, 255, 255);
+                break;
+            case "RedMap":
+                mapImage.color = Color.red;
+                break;
+        }
     }
 
     #endregion
@@ -228,6 +252,7 @@ public class LobbyManagerUI : MonoBehaviour
         Lobby_ResetPlayerAvatars(lobby);
         Lobby_SyncPlayerAvatars(lobby);
         Lobby_SetMapName(lobby);
+        Lobby_SetMapImage(lobby);
     }
 
     private void Lobby_ResetPlayerAvatars(Lobby lobby)

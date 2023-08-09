@@ -5286,6 +5286,7 @@ MonoBehaviour:
   lobbyCodeTextNumber: {fileID: 432955112}
   lobbyCodeText: {fileID: 1917512394}
   mapNameText: {fileID: 1081466907}
+  mapImage: {fileID: 114706555}
   lobbyPlayerDatas:
   - {fileID: 1080865432}
   - {fileID: 1437264428}
