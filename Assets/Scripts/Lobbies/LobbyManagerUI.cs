@@ -118,10 +118,9 @@ public class LobbyManagerUI : MonoBehaviour
         //Lobby_SetMapName();
     }
 
-    private void Lobby_SetMapName()
+    private void Lobby_SetMapName(Lobby lobby)
     {
-        //mapNameText.text = GetMapSceneNameString();
-        //mapNameText.text = LobbyManager.Instance.GetCurrentLobby().Data[];
+        mapNameText.text = lobby.Data[key: "LobbyMap"].Value;
     }
 
     #endregion
@@ -228,7 +227,7 @@ public class LobbyManagerUI : MonoBehaviour
         Lobby_DeactivateHostRelatedKickButtons(lobby);
         Lobby_ResetPlayerAvatars(lobby);
         Lobby_SyncPlayerAvatars(lobby);
-        Lobby_SetMapName();
+        Lobby_SetMapName(lobby);
     }
 
     private void Lobby_ResetPlayerAvatars(Lobby lobby)
