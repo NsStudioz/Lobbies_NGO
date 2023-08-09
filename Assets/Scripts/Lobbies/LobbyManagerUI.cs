@@ -28,6 +28,7 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private TMP_Text lobbyPrivacyText;
     [SerializeField] private TMP_Text lobbyCodeTextNumber;
     [SerializeField] private TMP_Text lobbyCodeText;
+    [SerializeField] private TMP_Text mapNameText;
 
     private readonly string publicLobby = "PUBLIC";
     private readonly string privateLobby = "PRIVATE";
@@ -108,6 +109,7 @@ public class LobbyManagerUI : MonoBehaviour
 
         Debug.Log("MapIndex: " + mapIndex);
     }
+
 
     #endregion
 
