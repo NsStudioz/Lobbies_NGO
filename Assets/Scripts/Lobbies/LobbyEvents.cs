@@ -50,6 +50,13 @@ public class LobbyEvents
     public delegate void LobbyMapChange(string mapName);
     public static LobbyMapChange OnLobbyMapChange;
 
+    // Lobby Query:
+    public delegate void TriggerLobbyListRefresh();
+    public static TriggerLobbyListRefresh OnTriggerLobbyListRefresh;
+
+    public delegate void LobbyListChange(List<Lobby> lobbyList);
+    public static LobbyListChange OnLobbyListChange;
+
     // Player_Update:
     public delegate void PlayerAvatarUpdate(string playerAvatar);
     public static PlayerAvatarUpdate OnPlayerAvatarUpdate;
