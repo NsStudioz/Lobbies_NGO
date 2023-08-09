@@ -19,11 +19,13 @@ public class JoinLobbyUI : MonoBehaviour
     private void OnEnable()
     {
         lobbyListRefreshBtn.onClick.AddListener(Event_OnTriggerLobbyListRefresh);
+        LobbyEvents.OnLobbyListChange += LobbyList_Refresh;
     }
 
     private void OnDisable()
     {
         lobbyListRefreshBtn.onClick.RemoveAllListeners();
+        LobbyEvents.OnLobbyListChange -= LobbyList_Refresh;
     }
 
     private void Event_OnTriggerLobbyListRefresh()
@@ -31,6 +33,14 @@ public class JoinLobbyUI : MonoBehaviour
         LobbyEvents.OnTriggerLobbyListRefresh?.Invoke();
     }
 
+    private void LobbyList_Refresh(List<Lobby> lobbyList)
+    {
+        for(int i = 0; i < lobbyList.Count; i++)
+        {
+            lobbyNames[i].text = lobbyList[i].Name;
+            lobbyPlayers[i].text = lobbyList[i].Players.Count + "/" + lobbyList[i].MaxPlayers;
+        }
+    }
 
 
 }
