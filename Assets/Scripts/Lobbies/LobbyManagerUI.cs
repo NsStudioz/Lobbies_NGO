@@ -99,7 +99,9 @@ public class LobbyManagerUI : MonoBehaviour
 
         Debug.Log("MapIndex: " + mapIndex);
 
-        Lobby_SetMapName();
+        LobbyEvents.OnLobbyMapChange?.Invoke(GetMapSceneNameString());
+
+        //Lobby_SetMapName();
     }
 
     private void Lobby_PreviousMap()
@@ -111,12 +113,15 @@ public class LobbyManagerUI : MonoBehaviour
 
         Debug.Log("MapIndex: " + mapIndex);
 
-        Lobby_SetMapName();
+        LobbyEvents.OnLobbyMapChange?.Invoke(GetMapSceneNameString());
+
+        //Lobby_SetMapName();
     }
 
     private void Lobby_SetMapName()
     {
-        mapNameText.text = GetMapSceneNameString();
+        //mapNameText.text = GetMapSceneNameString();
+        //mapNameText.text = LobbyManager.Instance.GetCurrentLobby().Data[];
     }
 
     #endregion
@@ -223,6 +228,7 @@ public class LobbyManagerUI : MonoBehaviour
         Lobby_DeactivateHostRelatedKickButtons(lobby);
         Lobby_ResetPlayerAvatars(lobby);
         Lobby_SyncPlayerAvatars(lobby);
+        Lobby_SetMapName();
     }
 
     private void Lobby_ResetPlayerAvatars(Lobby lobby)
