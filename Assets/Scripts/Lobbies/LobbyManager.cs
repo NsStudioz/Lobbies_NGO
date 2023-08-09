@@ -303,7 +303,7 @@ public class LobbyManager : MonoBehaviour
         CreateLobbyOptions options = new CreateLobbyOptions
         {
             Player = player,
-            IsPrivate = true,
+            IsPrivate = false,
             Data = new Dictionary<string, DataObject>
             {
                 { KEY_RELAY_JOIN_CODE, new DataObject(DataObject.VisibilityOptions.Member, relayJoinCodeValue) },
