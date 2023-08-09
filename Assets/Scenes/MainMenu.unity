@@ -5214,6 +5214,7 @@ GameObject:
   - component: {fileID: 934490759}
   - component: {fileID: 934490760}
   - component: {fileID: 934490761}
+  - component: {fileID: 934490762}
   m_Layer: 0
   m_Name: UI_Controller
   m_TagString: Untagged
@@ -5296,6 +5297,18 @@ MonoBehaviour:
   joinLobbyCodeInputField: {fileID: 706637785}
   leaveJoinLobbyBtn: {fileID: 1113039228}
   JoinLobbyByCodeBtn: {fileID: 557369698}
+--- !u!114 &934490762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934490758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d301ac349ecf6d4492426358d697add, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -5397,7 +5410,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &996408037
 RectTransform:
   m_ObjectHideFlags: 0
