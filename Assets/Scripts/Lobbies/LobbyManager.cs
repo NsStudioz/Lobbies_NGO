@@ -32,6 +32,9 @@ public class LobbyManager : MonoBehaviour
     private const string KEY_RELAY_JOIN_CODE = "RelayJoinCode";
     private string relayJoinCodeValue = "NoCodeYet";
 
+    // Lobby list:
+    private List<Lobby> lobbyList;
+
     /*    private Coroutine heartbeatCoroutine = null;
         private Coroutine refreshLobbyCoroutine = null;
         private Coroutine refreshLobbyCoroutine_Client = null;*/

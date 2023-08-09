@@ -8,7 +8,7 @@ using UnityEngine;
 public class JoinLobbyUI : MonoBehaviour
 {
 
-    private List<Lobby> lobbiesToQuery = new List<Lobby>(6);                     // Available public lobbies.
+    //private List<Lobby> lobbiesToQuery = new List<Lobby>(6);                     // Available public lobbies.
     [SerializeField] private List<TMP_Text> lobbyNames = new List<TMP_Text>();   // Available public lobbies.
     [SerializeField] private List<TMP_Text> lobbyPlayers = new List<TMP_Text>(); // Available players in public lobby.
 
