@@ -5431,8 +5431,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d301ac349ecf6d4492426358d697add, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lobbyNames: []
-  lobbyPlayers: []
+  lobbyNames:
+  - {fileID: 1017697675}
+  - {fileID: 1122186652}
+  - {fileID: 1430096143}
+  - {fileID: 1575192565}
+  - {fileID: 1175240272}
+  lobbyPlayers:
+  - {fileID: 58650156}
+  - {fileID: 1994437420}
+  - {fileID: 1689321522}
+  - {fileID: 1502455637}
+  - {fileID: 1510628243}
   lobbyListRefreshBtn: {fileID: 462661188}
 --- !u!1 &963194225
 GameObject:
@@ -5535,7 +5545,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &996408037
 RectTransform:
   m_ObjectHideFlags: 0
