@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class JoinLobbyUI : MonoBehaviour
 {
@@ -11,5 +12,8 @@ public class JoinLobbyUI : MonoBehaviour
     //private List<Lobby> lobbiesToQuery = new List<Lobby>(6);                     // Available public lobbies.
     [SerializeField] private List<TMP_Text> lobbyNames = new List<TMP_Text>();   // Available public lobbies.
     [SerializeField] private List<TMP_Text> lobbyPlayers = new List<TMP_Text>(); // Available players in public lobby.
+
+    [SerializeField] private Button lobbyListRefreshBtn;
+    [SerializeField] private TMP_Text lobbyListRefreshText;
 
 }
