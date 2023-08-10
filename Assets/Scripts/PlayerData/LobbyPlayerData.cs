@@ -7,7 +7,6 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Services.Authentication;
-using static LobbyEvents;
 
 public class LobbyPlayerData : MonoBehaviour
 {
