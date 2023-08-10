@@ -319,6 +319,7 @@ public class LobbyManager : MonoBehaviour
         //StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
 
         LobbyEvents.OnCreateLobby?.Invoke();
+        LobbyEvents.OnLobbyPrivacyStateUpdated?.Invoke(currentLobby.IsPrivate);
         LobbyEvents.OnLobbyCreated?.Invoke(currentLobby.LobbyCode);
 
         Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);

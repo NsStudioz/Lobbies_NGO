@@ -35,7 +35,7 @@ public class LobbyManagerUI : MonoBehaviour
 
     private readonly string publicLobby = "PUBLIC";
     private readonly string privateLobby = "PRIVATE";
-    private bool isPrivate = true;
+    private bool isPrivate = false;
 
     [Header("CreateLobbyUI_Lists")]
     [SerializeField] private List<LobbyPlayerData> lobbyPlayerDatas = new List<LobbyPlayerData>();
@@ -69,7 +69,7 @@ public class LobbyManagerUI : MonoBehaviour
         previousMapBtn.onClick.AddListener(Lobby_PreviousMap);
 
         // Events:
-        LobbyEvents.OnCreateLobby += Lobby_InitializePrivacyStateToPrivate;
+        //LobbyEvents.OnCreateLobby += Lobby_InitializePrivacyStateToPrivate;
         LobbyEvents.OnLobbyCreated += Lobby_UpdateCodeNumberText;
         LobbyEvents.OnLobbyPrivacyStateUpdated += Lobby_UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated += Lobby_UpdateLobby;
@@ -228,7 +228,7 @@ public class LobbyManagerUI : MonoBehaviour
         RemoveAvatarArrayButtonListeners();
 
         // Events:
-        LobbyEvents.OnCreateLobby -= Lobby_InitializePrivacyStateToPrivate;
+        //LobbyEvents.OnCreateLobby -= Lobby_InitializePrivacyStateToPrivate;
         LobbyEvents.OnLobbyCreated -= Lobby_UpdateCodeNumberText;
         LobbyEvents.OnLobbyPrivacyStateUpdated -= Lobby_UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated -= Lobby_UpdateLobby;
@@ -282,8 +282,8 @@ public class LobbyManagerUI : MonoBehaviour
 
     private void Lobby_InitializePrivacyStateToPrivate()
     {
-        if (!isPrivate)
-             isPrivate = true;
+        if (isPrivate)
+             isPrivate = false;
 
         Lobby_UpdateLobbyPrivacyText(isPrivate);
     }
