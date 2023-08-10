@@ -23,6 +23,8 @@ public class JoinLobbyUI : MonoBehaviour
     private void OnEnable()
     {
         lobbyListRefreshBtn.onClick.AddListener(Event_OnTriggerLobbyListRefresh);
+        quickJoinLobbyBtn.onClick.AddListener(Event_OnQuickJoiningLobby);
+
         LobbyEvents.OnLobbyListChange += LobbyList_Refresh;
         MainMenuUI.OnJoinLobbyButtonClicked += StartAutoRefreshLobbyList;
         LobbyEvents.OnLeaveJoinLobbyUI += StopAutoRefreshLobbyList;
@@ -31,6 +33,8 @@ public class JoinLobbyUI : MonoBehaviour
     private void OnDisable()
     {
         lobbyListRefreshBtn.onClick.RemoveAllListeners();
+        quickJoinLobbyBtn.onClick.RemoveAllListeners();
+
         LobbyEvents.OnLobbyListChange -= LobbyList_Refresh;
         MainMenuUI.OnJoinLobbyButtonClicked -= StartAutoRefreshLobbyList;
         LobbyEvents.OnLeaveJoinLobbyUI -= StopAutoRefreshLobbyList;
@@ -39,6 +43,11 @@ public class JoinLobbyUI : MonoBehaviour
     private void Event_OnTriggerLobbyListRefresh()
     {
         LobbyEvents.OnTriggerLobbyListRefresh?.Invoke();
+    }
+
+    private void Event_OnQuickJoiningLobby()
+    {
+        LobbyEvents.OnQuickJoiningLobby?.Invoke();
     }
 
     private void LobbyList_Refresh(List<Lobby> lobbyList)
