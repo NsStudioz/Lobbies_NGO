@@ -42,11 +42,21 @@ public class JoinLobbyUI : MonoBehaviour
 
     private void LobbyList_Refresh(List<Lobby> lobbyList)
     {
-        for(int i = 0; i < lobbyList.Count; i++)
+        ClearAllUsedTextsInLists();
+
+        for (int i = 0; i < lobbyList.Count; i++)
         {
             lobbyNames[i].text = lobbyList[i].Name;
             lobbyPlayers[i].text = lobbyList[i].Players.Count + "/" + lobbyList[i].MaxPlayers;
         }
+    }
+
+    private void ClearAllUsedTextsInLists()
+    {
+        foreach (TMP_Text item in lobbyNames)
+            item.text = "N/A";
+        foreach (TMP_Text item in lobbyPlayers)
+            item.text = "N/A";
     }
 
     private void StartAutoRefreshLobbyList()
