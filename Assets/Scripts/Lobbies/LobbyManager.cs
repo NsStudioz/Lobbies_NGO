@@ -35,10 +35,6 @@ public class LobbyManager : MonoBehaviour
     // Lobby list:
     private List<Lobby> lobbyList;
 
-    /*    private Coroutine heartbeatCoroutine = null;
-        private Coroutine refreshLobbyCoroutine = null;
-        private Coroutine refreshLobbyCoroutine_Client = null;*/
-
     #region Lobby_Helpers:
 
     public Lobby GetCurrentLobby()
@@ -573,6 +569,8 @@ public class LobbyManager : MonoBehaviour
     {
         //StopLobbyCoroutines();
 
+        StopAllCoroutines(); // stop lobby hearbeat.
+
         if (currentLobby.MaxPlayers > 0)
         {
             await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
@@ -600,8 +598,6 @@ public class LobbyManager : MonoBehaviour
     private void StopLobbyCoroutines()
     {
         StopAllCoroutines();
-/*        heartbeatCoroutine = null;
-        refreshLobbyCoroutine = null;*/
     }
 
     #endregion
