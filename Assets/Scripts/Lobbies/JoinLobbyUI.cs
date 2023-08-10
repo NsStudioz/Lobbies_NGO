@@ -23,12 +23,16 @@ public class JoinLobbyUI : MonoBehaviour
     {
         lobbyListRefreshBtn.onClick.AddListener(Event_OnTriggerLobbyListRefresh);
         LobbyEvents.OnLobbyListChange += LobbyList_Refresh;
+        MainMenuUI.OnJoinLobbyButtonClicked += StartAutoRefreshLobbyList;
+        LobbyEvents.OnLeaveJoinLobbyUI += StopAutoRefreshLobbyList;
     }
 
     private void OnDisable()
     {
         lobbyListRefreshBtn.onClick.RemoveAllListeners();
         LobbyEvents.OnLobbyListChange -= LobbyList_Refresh;
+        MainMenuUI.OnJoinLobbyButtonClicked -= StartAutoRefreshLobbyList;
+        LobbyEvents.OnLeaveJoinLobbyUI -= StopAutoRefreshLobbyList;
     }
 
     private void Event_OnTriggerLobbyListRefresh()
@@ -42,6 +46,30 @@ public class JoinLobbyUI : MonoBehaviour
         {
             lobbyNames[i].text = lobbyList[i].Name;
             lobbyPlayers[i].text = lobbyList[i].Players.Count + "/" + lobbyList[i].MaxPlayers;
+        }
+    }
+
+    private void StartAutoRefreshLobbyList()
+    {
+        isEnabled = true;
+
+        StartCoroutine(RefreshLobbyListTimer());
+    }
+    private void StopAutoRefreshLobbyList()
+    {
+        isEnabled = false;
+
+        StopAllCoroutines();
+    }
+
+    private IEnumerator RefreshLobbyListTimer()
+    {
+        while (isEnabled)
+        {
+            Event_OnTriggerLobbyListRefresh();
+
+            Debug.Log("Trigger lobby list refresh!");
+            yield return new WaitForSecondsRealtime(lobbyListRefreshTimer);
         }
     }
 
