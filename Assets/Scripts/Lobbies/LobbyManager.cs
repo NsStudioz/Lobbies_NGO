@@ -567,8 +567,6 @@ public class LobbyManager : MonoBehaviour
 
     private async Task LeaveLobby()
     {
-        //StopLobbyCoroutines();
-
         StopAllCoroutines(); // stop lobby hearbeat.
 
         if (currentLobby.MaxPlayers > 0)
@@ -595,18 +593,13 @@ public class LobbyManager : MonoBehaviour
         currentLobby = null;
     }
 
-    private void StopLobbyCoroutines()
-    {
-        StopAllCoroutines();
-    }
-
     #endregion
 
     // This seems to be the proper way when closing app (Not 100% sure but it works atm):
     private void OnApplicationQuit()
     {
         if (currentLobby != null)
-            StopLobbyCoroutines();
+            StopAllCoroutines();
 
         if (IsLobbyHost())
             LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
