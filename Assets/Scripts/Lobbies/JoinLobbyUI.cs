@@ -12,6 +12,7 @@ public class JoinLobbyUI : MonoBehaviour
 
     [SerializeField] private List<TMP_Text> lobbyNames = new List<TMP_Text>();   // Available public lobbies.
     [SerializeField] private List<TMP_Text> lobbyPlayers = new List<TMP_Text>(); // Available players in public lobby.
+    [SerializeField] private List<Button> lobbyListButtons = new List<Button>();
 
     [SerializeField] private Button lobbyListRefreshBtn;
     [SerializeField] private Button quickJoinLobbyBtn;
