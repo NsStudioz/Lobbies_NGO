@@ -5444,6 +5444,9 @@ MonoBehaviour:
   - {fileID: 1502455637}
   - {fileID: 1510628243}
   lobbyListRefreshBtn: {fileID: 462661188}
+  quickJoinLobbyBtn: {fileID: 822042128}
+  isEnabled: 0
+  lobbyListRefreshTimer: 10
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
