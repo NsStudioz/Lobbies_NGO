@@ -157,6 +157,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnLobbyMapChange += TryCatch_UpdateLobbyMap;
         LobbyEvents.OnStartGame += StartGame;
         LobbyEvents.OnTriggerLobbyListRefresh += TryCatch_RefreshlobbyList;
+        LobbyEvents.OnQuickJoiningLobby += TryCatch_QuickJoinLobby;
 
     }
 
@@ -172,6 +173,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnLobbyMapChange -= TryCatch_UpdateLobbyMap;
         LobbyEvents.OnStartGame -= StartGame;
         LobbyEvents.OnTriggerLobbyListRefresh -= TryCatch_RefreshlobbyList;
+        LobbyEvents.OnQuickJoiningLobby -= TryCatch_QuickJoinLobby;
 
     }
 
@@ -347,6 +349,25 @@ public class LobbyManager : MonoBehaviour
 
         LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
         //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
+    }
+
+    private async void TryCatch_QuickJoinLobby()
+    {
+        await TryCatchAsyncBool(QuickJoinLobbyOptions());
+    }
+
+    private async Task QuickJoinLobbyOptions()
+    {
+        Player player = await GetPlayer();
+
+        Lobby newLobby = await LobbyService.Instance.QuickJoinLobbyAsync(new QuickJoinLobbyOptions
+        {
+            Player = player
+        });
+
+        currentLobby = newLobby;
+
+        LobbyEvents.OnJoinedLobby?.Invoke();
     }
 
     private async void TryCatch_RefreshlobbyList()
