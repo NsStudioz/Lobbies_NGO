@@ -14,6 +14,7 @@ public class JoinLobbyUI : MonoBehaviour
     [SerializeField] private List<TMP_Text> lobbyPlayers = new List<TMP_Text>(); // Available players in public lobby.
 
     [SerializeField] private Button lobbyListRefreshBtn;
+    [SerializeField] private Button quickJoinLobbyBtn;
 
     [SerializeField] private bool isEnabled;
     [SerializeField] private float lobbyListRefreshTimer = 10f;
