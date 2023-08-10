@@ -17,6 +17,9 @@ public class LobbyEvents
     public delegate void JoiningLobbyByCode(string lobbyCode);
     public static JoiningLobbyByCode OnJoiningLobbyByCode;
 
+    public delegate void QuickJoinedLobby();
+    public static QuickJoinedLobby OnQuickJoiningLobby;
+
     public delegate void JoinedLobby();
     public static JoinedLobby OnJoinedLobby;
 
