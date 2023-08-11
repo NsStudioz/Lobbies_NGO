@@ -157,7 +157,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnLeaveLobby += TryCatch_LeaveLobby;
         LobbyEvents.OnLobbyPrivacyStateChange += ChangeLobbyPrivacyState;
         LobbyEvents.OnJoiningLobbyByCode += TryCatch_JoinLobbyByCode;
-        //LobbyEvents.OnPlayerKicked += TryCatch_KickPlayer;
+        LobbyEvents.OnPlayerKicked += TryCatch_KickPlayer;
         LobbyEvents.OnTriggerLobbyRefresh += HandleLobbyPolling;
         LobbyEvents.OnPlayerAvatarConfirmed += TryCatch_UpdatePlayerAvatar;
         LobbyEvents.OnLobbyMapChange += TryCatch_UpdateLobbyMap;
@@ -173,7 +173,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnLeaveLobby -= TryCatch_LeaveLobby;
         LobbyEvents.OnLobbyPrivacyStateChange -= ChangeLobbyPrivacyState;
         LobbyEvents.OnJoiningLobbyByCode -= TryCatch_JoinLobbyByCode;
-        //LobbyEvents.OnPlayerKicked -= TryCatch_KickPlayer;
+        LobbyEvents.OnPlayerKicked -= TryCatch_KickPlayer;
         LobbyEvents.OnTriggerLobbyRefresh -= HandleLobbyPolling;
         LobbyEvents.OnPlayerAvatarConfirmed -= TryCatch_UpdatePlayerAvatar;
         LobbyEvents.OnLobbyMapChange -= TryCatch_UpdateLobbyMap;
@@ -511,7 +511,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnKickedFromLobby?.Invoke();
     }
 
-    public async void TryCatch_KickPlayer(string playerId)
+    private async void TryCatch_KickPlayer(string playerId)
     {
         if (IsLobbyHost())
             await TryCatchAsyncBool(KickPlayer(playerId));
