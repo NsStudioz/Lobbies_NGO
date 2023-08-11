@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
 using Unity.Services.Lobbies.Models;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -76,6 +75,54 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnChoosePlayerAvatar += OpenPlayerAvatarPanelUI;
     }
 
+    private void OnEnable()
+    {
+        InitializeAvatarArrayButtonListeners();
+    }
+
+    private void OnDisable()
+    {
+        // Button Listeners:
+        leaveLobbyBtn.onClick.RemoveAllListeners();
+        leaveJoinLobbyBtn.onClick.RemoveAllListeners();
+        lobbyPrivacyBtn.onClick.RemoveAllListeners();
+        JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
+        chooseAvatar.onClick.RemoveAllListeners();
+        startBtn.onClick.RemoveAllListeners();
+        nextMapBtn.onClick.RemoveAllListeners();
+        previousMapBtn.onClick.RemoveAllListeners();
+        RemoveAvatarArrayButtonListeners();
+
+        // Events:
+        LobbyEvents.OnLobbyCreated -= Lobby_UpdateCodeNumberText;
+        LobbyEvents.OnLobbyPrivacyStateUpdated -= Lobby_UpdateLobbyPrivacyText;
+        LobbyEvents.OnLobbyUpdated -= Lobby_UpdateLobby;
+        LobbyEvents.OnJoinedLobby -= Lobby_DeactivateHostRelatedElementsOnClientSide;
+        LobbyEvents.OnChoosePlayerAvatar -= OpenPlayerAvatarPanelUI;
+    }
+
+    private void Lobby_UpdateLobby(Lobby lobby)
+    {
+        Lobby_UpdateLobbyPlayerCountText(lobby);
+        Lobby_SyncPlayersNames(lobby);
+        Lobby_SyncPlayerKickButtons(lobby);
+        Lobby_DeactivateHostRelatedKickButtons(lobby);
+        Lobby_ResetPlayerAvatars(lobby);
+        Lobby_SyncPlayerAvatars(lobby);
+        Lobby_SetMapName(lobby);
+        Lobby_SetMapImage(lobby);
+    }
+
+    private void Event_OnStartGame()
+    {
+        LobbyEvents.OnStartGame?.Invoke();
+    }
+
+    private void Event_OnLeaveLobby()
+    {
+        LobbyEvents.OnLeaveLobby?.Invoke();
+    }
+
     #region Map_Changes:
 
     public int GetMapIndex()
@@ -136,32 +183,7 @@ public class LobbyManagerUI : MonoBehaviour
 
     #endregion
 
-
-    private void Event_OnStartGame()
-    {
-        LobbyEvents.OnStartGame?.Invoke();
-    }
-
-    private void OnEnable()
-    {
-        InitializeAvatarArrayButtonListeners();
-    }
-
-    private void OpenPlayerAvatarPanelUI()
-    {
-        playerAvatarPanel.SetActive(true);
-    }
-
-    private void ClosePlayerAvatarPanelUI()
-    {
-        playerAvatarPanel.SetActive(false);
-    }
-
-    private void RemoveAvatarArrayButtonListeners()
-    {
-        for(int i = 0; i < avatarArrayBtn.Length; i++)
-            avatarArrayBtn[i].onClick.RemoveAllListeners();
-    }
+    #region Player_Avatar:
 
     private void InitializeAvatarArrayButtonListeners()
     {
@@ -177,64 +199,34 @@ public class LobbyManagerUI : MonoBehaviour
         }
     }
 
+    private void RemoveAvatarArrayButtonListeners()
+    {
+        for (int i = 0; i < avatarArrayBtn.Length; i++)
+            avatarArrayBtn[i].onClick.RemoveAllListeners();
+    }
+
     private void SetNewPlayerAvatar(int index)
     {
         switch (index)
         {
-            case 0:  
+            case 0:
                 LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Heart);
                 break;
-            case 1:  
+            case 1:
                 LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Diamond);
                 break;
-            case 2:  
+            case 2:
                 LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Gold);
                 break;
-            case 3:  
+            case 3:
                 LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Star);
                 break;
-            case 4:  
+            case 4:
                 LobbyEvents.OnPlayerAvatarConfirmed?.Invoke(LobbyManager.PlayerAvatarEnum.Lightning);
                 break;
             default:
                 break;
         }
-    }
-
-    private void OnDisable()
-    {
-        // Button Listeners:
-        leaveLobbyBtn.onClick.RemoveAllListeners();
-        leaveJoinLobbyBtn.onClick.RemoveAllListeners();
-        lobbyPrivacyBtn.onClick.RemoveAllListeners();
-        JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
-        chooseAvatar.onClick.RemoveAllListeners();
-        startBtn.onClick.RemoveAllListeners();
-        nextMapBtn.onClick.RemoveAllListeners();
-        previousMapBtn.onClick.RemoveAllListeners();
-        RemoveAvatarArrayButtonListeners();
-
-        // Events:
-        LobbyEvents.OnLobbyCreated -= Lobby_UpdateCodeNumberText;
-        LobbyEvents.OnLobbyPrivacyStateUpdated -= Lobby_UpdateLobbyPrivacyText;
-        LobbyEvents.OnLobbyUpdated -= Lobby_UpdateLobby;
-        LobbyEvents.OnJoinedLobby -= Lobby_DeactivateHostRelatedElementsOnClientSide;
-        LobbyEvents.OnChoosePlayerAvatar -= OpenPlayerAvatarPanelUI;
-    }
-
-
-    #region CreateLobby_Functions:
-
-    private void Lobby_UpdateLobby(Lobby lobby)
-    {
-        Lobby_UpdateLobbyPlayerCountText(lobby);
-        Lobby_SyncPlayersNames(lobby);
-        Lobby_SyncPlayerKickButtons(lobby);
-        Lobby_DeactivateHostRelatedKickButtons(lobby);
-        Lobby_ResetPlayerAvatars(lobby);
-        Lobby_SyncPlayerAvatars(lobby);
-        Lobby_SetMapName(lobby);
-        Lobby_SetMapImage(lobby);
     }
 
     private void Lobby_ResetPlayerAvatars(Lobby lobby)
@@ -249,12 +241,20 @@ public class LobbyManagerUI : MonoBehaviour
             lobbyPlayerDatas[i].UpdatePlayerAvatar(lobbyPlayers[i]);
     }
 
-    private void Event_OnLeaveLobby()
+    private void OpenPlayerAvatarPanelUI()
     {
-        LobbyEvents.OnLeaveLobby?.Invoke();
+        playerAvatarPanel.SetActive(true);
     }
 
-    // Lobby Privacy:
+    private void ClosePlayerAvatarPanelUI()
+    {
+        playerAvatarPanel.SetActive(false);
+    }
+
+    #endregion
+
+    #region Lobby_Privacy:
+
     private void Event_OnLobbyPrivacyStateChange()
     {
         isPrivate = !isPrivate;
@@ -270,6 +270,9 @@ public class LobbyManagerUI : MonoBehaviour
             lobbyPrivacyText.text = publicLobby;
     }
 
+    #endregion
+
+    #region Player_Text:
 
     // Player Count:
     private void Lobby_UpdateLobbyPlayerCountText(Lobby lobby)
@@ -315,7 +318,10 @@ public class LobbyManagerUI : MonoBehaviour
             lobbyPlayerDatas[i].UpdatePlayerName(lobbyPlayers[i]);
     }
 
-    // Lobby Host Kick Buttons:
+    #endregion
+
+    #region Host/Client_Elements:
+
     private void Lobby_SyncPlayerKickButtons(Lobby lobby)
     {
         Lobby_DeactivatePlayerKickButtons(lobby);
@@ -334,18 +340,17 @@ public class LobbyManagerUI : MonoBehaviour
             lobbyPlayerDatas[i].ActivateKickButtons();
     }
 
-    // Client Limitations:
-    private void Lobby_DeactivateHostRelatedElementsOnClientSide()
-    {
-        DeactivateHostRelatedButtons();
-        DeactivateHostsRelatedTexts();
-    }
-
     private void Lobby_DeactivateHostRelatedKickButtons(Lobby lobby)
     {
         if (LobbyManager.Instance.IsLobbyClient())
             for (int i = 1; i < lobby.MaxPlayers; i++) // lobby.MaxPlayers => currently works, monitoring for possible errors
                 lobbyPlayerDatas[i].DeactivateKickButtons();
+    }
+
+    private void Lobby_DeactivateHostRelatedElementsOnClientSide()
+    {
+        DeactivateHostRelatedButtons();
+        DeactivateHostsRelatedTexts();
     }
 
     private void DeactivateHostsRelatedTexts()
