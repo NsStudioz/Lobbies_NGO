@@ -78,7 +78,6 @@ public class LobbyManager : MonoBehaviour
         return false;
     }
 
-    // Exception fixed, monitoring for further potential issues:
     private async Task<Player> GetPlayer()
     {
         return new Player(AuthenticationService.Instance.PlayerId, null, new Dictionary<string, PlayerDataObject> {
@@ -87,7 +86,6 @@ public class LobbyManager : MonoBehaviour
         });
     }
 
-    // Exception fixed, monitoring for further potential issues:
     private async Task<string> GetPlayerName()
     {
         playerName = await AuthenticationService.Instance.GetPlayerNameAsync();
@@ -185,11 +183,6 @@ public class LobbyManager : MonoBehaviour
 
     #region Lobby_Updates:
 
-    private void Update()
-    {
-        //HandleLobbyPollingOld(); 
-    }
-
     // KICK FUNCTION WORKS! Exception still thrown, need further check & research on solving this.
     private async void HandleLobbyPolling()
     {
@@ -206,7 +199,7 @@ public class LobbyManager : MonoBehaviour
                 NotInAnyLobby();
                 Event_OnKickedFromLobby();
             }
-            // Test:
+
             if (IsLobbyClient())
                 await StartGameClientOnLobbyUpdated();
 
@@ -218,42 +211,6 @@ public class LobbyManager : MonoBehaviour
             {
                 NotInAnyLobby();
                 Event_OnKickedFromLobby();
-            }
-        }
-    }
-
-    private async void HandleLobbyPollingOld()
-    {
-        if (currentLobby != null)
-        {
-            lobbyPollTimer -= Time.deltaTime;
-            if (lobbyPollTimer <= 0)
-            {
-                float lobbyPollTimerMax = 1.1f;
-                lobbyPollTimer = lobbyPollTimerMax;
-                try
-                {
-                    if (IsPlayerInLobby())
-                    {
-                        Lobby newLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
-                        currentLobby = newLobby;
-                        LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
-                    }
-                    else
-                    {
-                        currentLobby = null;
-                        LobbyEvents.OnKickedFromLobby?.Invoke();
-                    }
-                }
-                catch (LobbyServiceException e)
-                {
-                    Debug.Log(e);
-                    if ((e.Reason == LobbyExceptionReason.Forbidden || e.Reason == LobbyExceptionReason.LobbyNotFound))
-                    {
-                        currentLobby = null;
-                        LobbyEvents.OnKickedFromLobby?.Invoke();
-                    }
-                }
             }
         }
     }
@@ -296,7 +253,6 @@ public class LobbyManager : MonoBehaviour
 
     #region Lobby_Connections:
 
-    // Create_Lobby:
     private async void TryCatch_CreateNewLobby()
     {
         await TryCatchAsyncBool(CreateNewLobby());
@@ -333,8 +289,6 @@ public class LobbyManager : MonoBehaviour
         Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
     }
 
-
-    // Join_Lobby:
     private async void TryCatch_JoinLobbyByCode(string lobbyCode)
     {
         await TryCatchAsyncBool(JoinLobbyByCode(lobbyCode));
@@ -354,7 +308,6 @@ public class LobbyManager : MonoBehaviour
         //StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
 
         LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
-        //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
     }
 
     private async void TryCatch_JoinLobbyID(int lobbyIndex)
@@ -416,6 +369,7 @@ public class LobbyManager : MonoBehaviour
                             value: "0")       
         };
 
+        // Decending order from newest to oldest:
         options.Order = new List<QueryOrder>
         {
             new QueryOrder(asc: false,
@@ -428,7 +382,6 @@ public class LobbyManager : MonoBehaviour
 
         LobbyEvents.OnLobbyListChange?.Invoke(lobbyList);
     }
-
 
     #endregion
 
