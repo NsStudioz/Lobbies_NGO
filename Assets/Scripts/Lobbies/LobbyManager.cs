@@ -144,7 +144,7 @@ public class LobbyManager : MonoBehaviour
     private void OnEnable()
     {
         MainMenuUI.OnCreateLobbyButtonClicked += TryCatch_CreateNewLobby;
-        LobbyEvents.OnLeaveLobby += LeaveCurrentLobby;
+        LobbyEvents.OnLeaveLobby += TryCatch_LeaveLobby;
         LobbyEvents.OnLobbyPrivacyStateChange += ChangeLobbyPrivacyState;
         LobbyEvents.OnJoiningLobbyByCode += TryCatch_JoinLobbyByCode;
         //LobbyEvents.OnPlayerKicked += TryCatch_KickPlayer;
@@ -154,13 +154,13 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnStartGame += StartGame;
         LobbyEvents.OnTriggerLobbyListRefresh += TryCatch_RefreshlobbyList;
         LobbyEvents.OnQuickJoiningLobby += TryCatch_QuickJoinLobby;
-        LobbyEvents.OnJoiningLobbyID += TryCatch_JoinlobbyID;
+        LobbyEvents.OnJoiningLobbyID += TryCatch_JoinLobbyID;
     }
 
     private void OnDisable()
     {
         MainMenuUI.OnCreateLobbyButtonClicked -= TryCatch_CreateNewLobby;
-        LobbyEvents.OnLeaveLobby -= LeaveCurrentLobby;
+        LobbyEvents.OnLeaveLobby -= TryCatch_LeaveLobby;
         LobbyEvents.OnLobbyPrivacyStateChange -= ChangeLobbyPrivacyState;
         LobbyEvents.OnJoiningLobbyByCode -= TryCatch_JoinLobbyByCode;
         //LobbyEvents.OnPlayerKicked -= TryCatch_KickPlayer;
@@ -170,7 +170,7 @@ public class LobbyManager : MonoBehaviour
         LobbyEvents.OnStartGame -= StartGame;
         LobbyEvents.OnTriggerLobbyListRefresh -= TryCatch_RefreshlobbyList;
         LobbyEvents.OnQuickJoiningLobby -= TryCatch_QuickJoinLobby;
-        LobbyEvents.OnJoiningLobbyID -= TryCatch_JoinlobbyID;
+        LobbyEvents.OnJoiningLobbyID -= TryCatch_JoinLobbyID;
     }
 
     #region Lobby_Updates:
@@ -290,7 +290,7 @@ public class LobbyManager : MonoBehaviour
     private async void TryCatch_CreateNewLobby()
     {
         await TryCatchAsyncBool(CreateNewLobby());
-        Debug.Log(currentLobby);
+        Debug.Log("New Lobby Created: " + currentLobby);
     }
 
     private async Task CreateNewLobby()
@@ -347,12 +347,12 @@ public class LobbyManager : MonoBehaviour
         //LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
     }
 
-    private async void TryCatch_JoinlobbyID(int lobbyIndex)
+    private async void TryCatch_JoinLobbyID(int lobbyIndex)
     {
-        await TryCatchAsyncBool(JoinlobbyID(lobbyIndex));
+        await TryCatchAsyncBool(JoinLobbyID(lobbyIndex));
     }
 
-    private async Task JoinlobbyID(int lobbyIndex)
+    private async Task JoinLobbyID(int lobbyIndex)
     {
         if(lobbyList.Count < lobbyIndex) 
             return;
@@ -371,10 +371,10 @@ public class LobbyManager : MonoBehaviour
 
     private async void TryCatch_QuickJoinLobby()
     {
-        await TryCatchAsyncBool(QuickJoinLobbyOptions());
+        await TryCatchAsyncBool(QuickJoinLobby());
     }
 
-    private async Task QuickJoinLobbyOptions()
+    private async Task QuickJoinLobby()
     {
         Player player = await GetPlayer();
 
@@ -529,6 +529,7 @@ public class LobbyManager : MonoBehaviour
     #endregion
 
 
+
     #region Player_modifications:
 
     private async void TryCatch_UpdatePlayerAvatar(PlayerAvatarEnum playerAvatar)
@@ -555,10 +556,9 @@ public class LobbyManager : MonoBehaviour
 
     #endregion
 
-
     #region Lobby_Exit_Handling:
 
-    private async void LeaveCurrentLobby()
+    private async void TryCatch_LeaveLobby()
     {
         await CurrentLobbyCheck_TryCatchAsyncBool(LeaveLobby());
 
@@ -567,7 +567,8 @@ public class LobbyManager : MonoBehaviour
 
     private async Task LeaveLobby()
     {
-        StopAllCoroutines(); // stop lobby hearbeat.
+        if(IsLobbyHost())
+            StopAllCoroutines(); // stop lobby hearbeat.
 
         if (currentLobby.MaxPlayers > 0)
         {
@@ -577,10 +578,10 @@ public class LobbyManager : MonoBehaviour
         }
 
         else if (currentLobby.MaxPlayers <= 0)
-            await DeleteCurrentLobby();
+            await TryCatch_DeleteLobby();
     }
 
-    private async Task<bool> DeleteCurrentLobby()
+    private async Task<bool> TryCatch_DeleteLobby()
     {
         bool succeded = await CurrentLobbyCheck_TryCatchAsyncBool(DeleteLobby());
         return succeded;
@@ -599,15 +600,23 @@ public class LobbyManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         if (currentLobby != null)
-            StopAllCoroutines();
+        {
+            if (IsLobbyHost())
+            {
+                StopAllCoroutines();
+                LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
+                //currentLobby = null;
+            }
+            //if (IsLobbyHost())
+            else if (IsLobbyClient())
+            {
+                LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
+                //currentLobby = null;
+            }
 
-        if (IsLobbyHost())
-            LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
-
-        else if (IsLobbyClient())
-            LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
+            currentLobby = null;
+        }
     }
-
 }
 
 
