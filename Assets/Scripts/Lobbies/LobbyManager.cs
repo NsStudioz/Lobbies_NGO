@@ -20,19 +20,20 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private float refreshLobbyTimer = 1f;
     [SerializeField] private float lobbyPollTimer = 1.1f; // WIP, for update version of refresh lobby.
 
-    private Lobby currentLobby;
-
+    // Lobby Keys:
+    private readonly int MAX_PLAYERS = 4;
     public const string KEY_PLAYER_NAME = "PlayerName"; // this is a dictionary key! not a value!
     public const string KEY_PLAYER_AVATAR = "Avatar";   // this is a dictionary key! not a value!
     private const string KEY_LOBBY_MAP = "LobbyMap";
     private string playerName = "";
-    private readonly int MAX_PLAYERS = 4;
 
-    // Relay:
+    // Relay Keys:
     private const string KEY_RELAY_JOIN_CODE = "RelayJoinCode";
     private string relayJoinCodeValue = "NoCodeYet";
 
-    // Lobby list:
+    // Lobby Objects
+    private Lobby currentLobby;
+
     private List<Lobby> lobbyList;
 
     #region Lobby_Helpers:
@@ -137,11 +138,7 @@ public class LobbyManager : MonoBehaviour
 
     public enum PlayerAvatarEnum
     { 
-        Heart,
-        Diamond,
-        Gold,
-        Star,
-        Lightning
+        Heart, Diamond, Gold, Star, Lightning
     }
 
     private void Awake()
@@ -393,7 +390,6 @@ public class LobbyManager : MonoBehaviour
         if (IsLobbyHost())
             await StartGameHost();
 
-        //SceneManager.LoadSceneAsync(LobbyManagerUI.Instance.GetMapSceneNameString());
         SceneManager.LoadSceneAsync(currentLobby.Data[KEY_LOBBY_MAP].Value);
     }
 
@@ -537,17 +533,12 @@ public class LobbyManager : MonoBehaviour
         if(IsLobbyHost())
             StopAllCoroutines(); // stop lobby hearbeat.
 
-        // fix required:
-        if (currentLobby.MaxPlayers > 0)
-        {
-            await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
+        await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
 
-            NotInAnyLobby();
-        }
-
-        // fix required:
-        else if (currentLobby.MaxPlayers <= 0)
+        if (currentLobby.MaxPlayers < 1)
             await TryCatch_DeleteLobby();
+
+        NotInAnyLobby();
     }
 
     private async Task TryCatch_DeleteLobby()
@@ -558,8 +549,6 @@ public class LobbyManager : MonoBehaviour
     private async Task DeleteLobby()
     {
         await LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
-
-        NotInAnyLobby();
     }
 
     #endregion
