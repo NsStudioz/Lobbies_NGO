@@ -76,6 +76,7 @@ public class LobbyPlayerData : MonoBehaviour
         {
             //LobbyManager.Instance.TryCatch_KickPlayer(player.Id);
             LobbyEvents.OnPlayerKicked?.Invoke(player.Id);
+            player = null;
             // maybe should put player = null, to allow multiple kicks of same reconnecting player. Related to kick function.
         }
     }
