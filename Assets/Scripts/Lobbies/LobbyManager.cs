@@ -18,7 +18,6 @@ public class LobbyManager : MonoBehaviour
     public static LobbyManager Instance;
 
     [SerializeField] private float refreshLobbyTimer = 1f;
-    [SerializeField] private float lobbyPollTimer = 1.1f; // WIP, for update version of refresh lobby.
 
     // Lobby Keys:
     private readonly int MAX_PLAYERS = 4;
@@ -149,38 +148,42 @@ public class LobbyManager : MonoBehaviour
     private void OnEnable()
     {
         MainMenuUI.OnCreateLobbyButtonClicked += TryCatch_CreateNewLobby;
-        LobbyEvents.OnLeaveLobby += TryCatch_LeaveLobby;
-        LobbyEvents.OnLobbyPrivacyStateChange += ChangeLobbyPrivacyState;
-        LobbyEvents.OnJoiningLobbyByCode += TryCatch_JoinLobbyByCode;
-        LobbyEvents.OnPlayerKicked += TryCatch_KickPlayer;
-        LobbyEvents.OnTriggerLobbyRefresh += HandleLobbyPolling;
         LobbyEvents.OnPlayerAvatarConfirmed += TryCatch_UpdatePlayerAvatar;
+        LobbyEvents.OnLobbyPrivacyStateChange += ChangeLobbyPrivacyState;
         LobbyEvents.OnLobbyMapChange += TryCatch_UpdateLobbyMap;
-        LobbyEvents.OnStartGame += StartGame;
-        LobbyEvents.OnTriggerLobbyListRefresh += TryCatch_RefreshlobbyList;
-        LobbyEvents.OnQuickJoiningLobby += TryCatch_QuickJoinLobby;
+        LobbyEvents.OnPlayerKicked += TryCatch_KickPlayer;
+        
+        LobbyEvents.OnJoiningLobbyByCode += TryCatch_JoinLobbyByCode;
         LobbyEvents.OnJoiningLobbyID += TryCatch_JoinLobbyID;
+        LobbyEvents.OnQuickJoiningLobby += TryCatch_QuickJoinLobby;
+        LobbyEvents.OnLeaveLobby += TryCatch_LeaveLobby;
+        
+        LobbyEvents.OnTriggerLobbyListRefresh += TryCatch_RefreshlobbyList;
+        LobbyEvents.OnTriggerLobbyRefresh += HandleLobbyPolling;
+        LobbyEvents.OnStartGame += StartGame;
     }
 
     private void OnDisable()
     {
         MainMenuUI.OnCreateLobbyButtonClicked -= TryCatch_CreateNewLobby;
-        LobbyEvents.OnLeaveLobby -= TryCatch_LeaveLobby;
-        LobbyEvents.OnLobbyPrivacyStateChange -= ChangeLobbyPrivacyState;
-        LobbyEvents.OnJoiningLobbyByCode -= TryCatch_JoinLobbyByCode;
-        LobbyEvents.OnPlayerKicked -= TryCatch_KickPlayer;
-        LobbyEvents.OnTriggerLobbyRefresh -= HandleLobbyPolling;
         LobbyEvents.OnPlayerAvatarConfirmed -= TryCatch_UpdatePlayerAvatar;
+        LobbyEvents.OnLobbyPrivacyStateChange -= ChangeLobbyPrivacyState;
         LobbyEvents.OnLobbyMapChange -= TryCatch_UpdateLobbyMap;
-        LobbyEvents.OnStartGame -= StartGame;
-        LobbyEvents.OnTriggerLobbyListRefresh -= TryCatch_RefreshlobbyList;
-        LobbyEvents.OnQuickJoiningLobby -= TryCatch_QuickJoinLobby;
+        LobbyEvents.OnPlayerKicked -= TryCatch_KickPlayer;
+
+        LobbyEvents.OnJoiningLobbyByCode -= TryCatch_JoinLobbyByCode;
         LobbyEvents.OnJoiningLobbyID -= TryCatch_JoinLobbyID;
+        LobbyEvents.OnQuickJoiningLobby -= TryCatch_QuickJoinLobby;
+        LobbyEvents.OnLeaveLobby -= TryCatch_LeaveLobby;
+        
+        LobbyEvents.OnTriggerLobbyListRefresh -= TryCatch_RefreshlobbyList;
+        LobbyEvents.OnTriggerLobbyRefresh -= HandleLobbyPolling;
+        LobbyEvents.OnStartGame -= StartGame;
     }
 
     #region Lobby_Updates:
 
-    // KICK FUNCTION WORKS! Exception still thrown, need further check & research on solving this.
+    // KICK FUNCTION WORKS ONCE! Null reference exception still thrown on client side, need further check & research on solving this.
     private async void HandleLobbyPolling()
     {
         try
@@ -280,10 +283,17 @@ public class LobbyManager : MonoBehaviour
         //StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
 
         LobbyEvents.OnCreateLobby?.Invoke();
-        LobbyEvents.OnLobbyPrivacyStateUpdated?.Invoke(currentLobby.IsPrivate);
         LobbyEvents.OnLobbyCreated?.Invoke(currentLobby.LobbyCode);
+        Event_OnLobbyPrivacyStateUpdated();
 
         Debug.Log("Created Lobby " + currentLobby.Name + "  | Lobby's privacy state: " + currentLobby.IsPrivate + " | Lobby Code: " + currentLobby.LobbyCode);
+    }
+
+
+    // Show host's lobby panel, hide join lobby panel
+    private static void Event_OnJoinedLobby()
+    {
+        LobbyEvents.OnJoinedLobby?.Invoke();
     }
 
     private async void TryCatch_JoinLobbyByCode(string lobbyCode)
@@ -304,7 +314,7 @@ public class LobbyManager : MonoBehaviour
 
         //StartCoroutine(RefreshLobbyCoroutine(currentLobby.Id));
 
-        LobbyEvents.OnJoinedLobby?.Invoke(); // Show host's lobby panel, hide join lobby panel
+        Event_OnJoinedLobby(); 
     }
 
     private async void TryCatch_JoinLobbyID(int lobbyIndex)
@@ -326,7 +336,7 @@ public class LobbyManager : MonoBehaviour
 
         currentLobby = newLobby;
 
-        LobbyEvents.OnJoinedLobby?.Invoke();
+        Event_OnJoinedLobby();
     }
 
     private async void TryCatch_QuickJoinLobby()
@@ -345,7 +355,7 @@ public class LobbyManager : MonoBehaviour
 
         currentLobby = newLobby;
 
-        LobbyEvents.OnJoinedLobby?.Invoke();
+        Event_OnJoinedLobby();
     }
 
     private async void TryCatch_RefreshlobbyList()
@@ -438,6 +448,12 @@ public class LobbyManager : MonoBehaviour
 
 
     #region Lobby_Host_Functions:
+
+    private void Event_OnLobbyPrivacyStateUpdated()
+    {
+        LobbyEvents.OnLobbyPrivacyStateUpdated?.Invoke(currentLobby.IsPrivate);
+    }
+
     private async void ChangeLobbyPrivacyState(bool privacyState)
     {
         if (IsLobbyHost() && IsInAnyLobby())
@@ -449,8 +465,7 @@ public class LobbyManager : MonoBehaviour
 
             Lobby lobbyInstance = await LobbyService.Instance.UpdateLobbyAsync(currentLobby.Id, options);
             currentLobby = lobbyInstance;
-
-            LobbyEvents.OnLobbyPrivacyStateUpdated?.Invoke(currentLobby.IsPrivate);
+            Event_OnLobbyPrivacyStateUpdated();
             Debug.Log("Is Lobby Private?: " + currentLobby.IsPrivate);
         }
     }
@@ -535,7 +550,7 @@ public class LobbyManager : MonoBehaviour
 
         await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
 
-        if (currentLobby.MaxPlayers < 1)
+        if (currentLobby.MaxPlayers < 1) // seems to have fixed lobby not found error.
             await TryCatch_DeleteLobby();
 
         NotInAnyLobby();
