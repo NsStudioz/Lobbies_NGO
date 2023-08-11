@@ -256,7 +256,7 @@ public class LobbyManager : MonoBehaviour
     private async void TryCatch_CreateNewLobby()
     {
         await TryCatchAsyncBool(CreateNewLobby());
-        Debug.Log("New Lobby Created: " + currentLobby);
+        Debug.Log("New Lobby Created: " + currentLobby + "/" + "Lobby ID: " + currentLobby.Id);
     }
 
     private async Task CreateNewLobby()
