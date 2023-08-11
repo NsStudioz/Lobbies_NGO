@@ -69,15 +69,10 @@ public class LobbyManagerUI : MonoBehaviour
         previousMapBtn.onClick.AddListener(Lobby_PreviousMap);
 
         // Events:
-        //LobbyEvents.OnCreateLobby += Lobby_InitializePrivacyStateToPrivate;
         LobbyEvents.OnLobbyCreated += Lobby_UpdateCodeNumberText;
         LobbyEvents.OnLobbyPrivacyStateUpdated += Lobby_UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated += Lobby_UpdateLobby;
         LobbyEvents.OnJoinedLobby += Lobby_DeactivateHostRelatedElementsOnClientSide;
-        //LobbyEvents.OnLobbyUpdated += Lobby_UpdateLobbyPlayerCountText;
-        //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayersNames;
-        //LobbyEvents.OnLobbyUpdated += Lobby_DeactivateHostRelatedKickButtons;
-        //LobbyEvents.OnLobbyUpdated += Lobby_SyncPlayerKickButtons;
         LobbyEvents.OnChoosePlayerAvatar += OpenPlayerAvatarPanelUI;
     }
 
@@ -100,11 +95,7 @@ public class LobbyManagerUI : MonoBehaviour
         if (mapIndex >= mapListInt.Count)
             mapIndex = 0;
 
-        Debug.Log("MapIndex: " + mapIndex);
-
         LobbyEvents.OnLobbyMapChange?.Invoke(GetMapSceneNameString());
-
-        //Lobby_SetMapName();
     }
 
     private void Lobby_PreviousMap()
@@ -114,11 +105,7 @@ public class LobbyManagerUI : MonoBehaviour
         if (mapIndex < 0)
             mapIndex = 3;
 
-        Debug.Log("MapIndex: " + mapIndex);
-
         LobbyEvents.OnLobbyMapChange?.Invoke(GetMapSceneNameString());
-
-        //Lobby_SetMapName();
     }
 
     private void Lobby_SetMapName(Lobby lobby)
@@ -228,15 +215,10 @@ public class LobbyManagerUI : MonoBehaviour
         RemoveAvatarArrayButtonListeners();
 
         // Events:
-        //LobbyEvents.OnCreateLobby -= Lobby_InitializePrivacyStateToPrivate;
         LobbyEvents.OnLobbyCreated -= Lobby_UpdateCodeNumberText;
         LobbyEvents.OnLobbyPrivacyStateUpdated -= Lobby_UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated -= Lobby_UpdateLobby;
         LobbyEvents.OnJoinedLobby -= Lobby_DeactivateHostRelatedElementsOnClientSide;
-        //LobbyEvents.OnLobbyUpdated -= Lobby_UpdateLobbyPlayerCountText;
-        //LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayersNames;
-        //LobbyEvents.OnLobbyUpdated -= Lobby_DeactivateHostRelatedKickButtons;
-        //LobbyEvents.OnLobbyUpdated -= Lobby_SyncPlayerKickButtons;
         LobbyEvents.OnChoosePlayerAvatar -= OpenPlayerAvatarPanelUI;
     }
 
@@ -280,14 +262,6 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLobbyPrivacyStateChange?.Invoke(isPrivate);
     }
 
-    private void Lobby_InitializePrivacyStateToPrivate()
-    {
-        if (isPrivate)
-             isPrivate = false;
-
-        Lobby_UpdateLobbyPrivacyText(isPrivate);
-    }
-
     private void Lobby_UpdateLobbyPrivacyText(bool state)
     {
         if (state)
@@ -316,8 +290,6 @@ public class LobbyManagerUI : MonoBehaviour
         Lobby_SortPlayersList(lobby);
         Lobby_ClearPlayerNames(lobby);
         Lobby_UpdatePlayerNames(lobby);
-        // needs better placement:
-        //Lobby_SyncPlayerKickButtons(lobby);
     }
 
     private void Lobby_SortPlayersList(Lobby lobby)
@@ -331,7 +303,7 @@ public class LobbyManagerUI : MonoBehaviour
             lobbyPlayers.Add(lobby.Players[i]);*/
     }
 
-    private void Lobby_ClearPlayerNames(Lobby lobby)
+    private void Lobby_ClearPlayerNames(Lobby lobby) // NEEDS FIXING!
     {
         for (int i = 0; i < lobby.MaxPlayers - 1; i++)
             lobbyPlayerDatas[i].ResetPlayerNameText();
@@ -406,8 +378,14 @@ public class LobbyManagerUI : MonoBehaviour
         LobbyEvents.OnLeaveJoinLobbyUI?.Invoke();
     }
 
-
-
     #endregion
 
 }
+
+/*    private void Lobby_InitializePrivacyStateToPrivate()
+    {
+        if (isPrivate)
+             isPrivate = false;
+
+        Lobby_UpdateLobbyPrivacyText(isPrivate);
+    }*/
