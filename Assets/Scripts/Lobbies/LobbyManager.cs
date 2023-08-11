@@ -42,6 +42,16 @@ public class LobbyManager : MonoBehaviour
         return currentLobby;
     }
 
+    public bool IsInAnyLobby()
+    {
+        return currentLobby != null;
+    }
+
+    private void NotInAnyLobby()
+    {
+        currentLobby = null;
+    }
+
     public bool IsLobbyHost()
     {
         return currentLobby != null && currentLobby.HostId == AuthenticationService.Instance.PlayerId;
@@ -105,7 +115,7 @@ public class LobbyManager : MonoBehaviour
 
     private async Task<bool> CurrentLobbyCheck_TryCatchAsyncBool(Task promise)
     {
-        if (currentLobby != null)
+        if (IsInAnyLobby())
         {
             try
             {
@@ -193,8 +203,8 @@ public class LobbyManager : MonoBehaviour
             }
             else
             {
-                currentLobby = null;
-                LobbyEvents.OnKickedFromLobby?.Invoke();
+                NotInAnyLobby();
+                Event_OnKickedFromLobby();
             }
             // Test:
             if (IsLobbyClient())
@@ -206,8 +216,8 @@ public class LobbyManager : MonoBehaviour
             Debug.Log(e);
             if ((e.Reason == LobbyExceptionReason.Forbidden || e.Reason == LobbyExceptionReason.LobbyNotFound))
             {
-                currentLobby = null;
-                LobbyEvents.OnKickedFromLobby?.Invoke();
+                NotInAnyLobby();
+                Event_OnKickedFromLobby();
             }
         }
     }
@@ -250,7 +260,7 @@ public class LobbyManager : MonoBehaviour
 
     private IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
     {
-        while (currentLobby != null) // dont use while (true) => this will cause an exception (coroutines continue to work even when lobby is closed due to this)
+        while (IsInAnyLobby()) // dont use while (true) => this will cause an exception (coroutines continue to work even when lobby is closed due to this)
         {
             Debug.Log(message: "Heartbeat");
             LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
@@ -261,7 +271,7 @@ public class LobbyManager : MonoBehaviour
     private IEnumerator RefreshLobbyCoroutine(string lobbyId) // update lobby data (Player count, game mode, etc...)
     {
         // Original (No Kick Update):
-        while (currentLobby != null) // dont use while (true) => this will cause an exception (coroutines continue to work even when lobby is closed due to this)
+        while (IsInAnyLobby()) // dont use while (true) => this will cause an exception (coroutines continue to work even when lobby is closed due to this)
         {
             if (IsPlayerInLobby())
             {
@@ -481,7 +491,7 @@ public class LobbyManager : MonoBehaviour
     #region Lobby_Host_Functions:
     private async void ChangeLobbyPrivacyState(bool privacyState)
     {
-        if (IsLobbyHost() && currentLobby != null)
+        if (IsLobbyHost() && IsInAnyLobby())
         {
             UpdateLobbyOptions options = new UpdateLobbyOptions
             {
@@ -496,6 +506,10 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    private static void Event_OnKickedFromLobby()
+    {
+        LobbyEvents.OnKickedFromLobby?.Invoke();
+    }
 
     public async void TryCatch_KickPlayer(string playerId)
     {
@@ -570,28 +584,29 @@ public class LobbyManager : MonoBehaviour
         if(IsLobbyHost())
             StopAllCoroutines(); // stop lobby hearbeat.
 
+        // fix required:
         if (currentLobby.MaxPlayers > 0)
         {
             await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
 
-            currentLobby = null;
+            NotInAnyLobby();
         }
 
+        // fix required:
         else if (currentLobby.MaxPlayers <= 0)
             await TryCatch_DeleteLobby();
     }
 
-    private async Task<bool> TryCatch_DeleteLobby()
+    private async Task TryCatch_DeleteLobby()
     {
-        bool succeded = await CurrentLobbyCheck_TryCatchAsyncBool(DeleteLobby());
-        return succeded;
+        await CurrentLobbyCheck_TryCatchAsyncBool(DeleteLobby());
     }
 
     private async Task DeleteLobby()
     {
         await LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
 
-        currentLobby = null;
+        NotInAnyLobby();
     }
 
     #endregion
@@ -599,23 +614,21 @@ public class LobbyManager : MonoBehaviour
     // This seems to be the proper way when closing app (Not 100% sure but it works atm):
     private void OnApplicationQuit()
     {
-        if (currentLobby != null)
+        if (IsInAnyLobby())
         {
             if (IsLobbyHost())
             {
                 StopAllCoroutines();
                 LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
-                //currentLobby = null;
-            }
-            //if (IsLobbyHost())
-            else if (IsLobbyClient())
-            {
-                LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
-                //currentLobby = null;
             }
 
-            currentLobby = null;
+            else if (IsLobbyClient())
+                LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
+
+            NotInAnyLobby();
         }
+
+        // host receives a lobby not found bug when leaving lobby after the client exits abruptly.
     }
 }
 
