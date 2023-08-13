@@ -42,13 +42,7 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private List<int> mapListInt = new List<int>();
     private int mapIndex = 0;
 
-    // JoinLobby UI Elements:
-    [Header("JoinLobbyUI_Texts")]
-    [SerializeField] private TMP_InputField joinLobbyCodeInputField;
 
-    [Header("JoinLobbyUI_Buttons")]
-    [SerializeField] private Button leaveJoinLobbyBtn;
-    [SerializeField] private Button JoinLobbyByCodeBtn;
 
     private void Awake()
     {
@@ -59,9 +53,7 @@ public class LobbyManagerUI : MonoBehaviour
     {
         // Button Listeners:
         leaveLobbyBtn.onClick.AddListener(Event_OnLeaveLobby);
-        leaveJoinLobbyBtn.onClick.AddListener(Event_OnLeaveJoinLobbyUI);
         lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
-        JoinLobbyByCodeBtn.onClick.AddListener(Event_OnJoiningLobbyByCode);
         chooseAvatar.onClick.AddListener(OpenPlayerAvatarPanelUI);
         startBtn.onClick.AddListener(Event_OnStartGame);
         nextMapBtn.onClick.AddListener(Lobby_NextMap);
@@ -84,9 +76,7 @@ public class LobbyManagerUI : MonoBehaviour
     {
         // Button Listeners:
         leaveLobbyBtn.onClick.RemoveAllListeners();
-        leaveJoinLobbyBtn.onClick.RemoveAllListeners();
         lobbyPrivacyBtn.onClick.RemoveAllListeners();
-        JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
         chooseAvatar.onClick.RemoveAllListeners();
         startBtn.onClick.RemoveAllListeners();
         nextMapBtn.onClick.RemoveAllListeners();
@@ -370,20 +360,6 @@ public class LobbyManagerUI : MonoBehaviour
 
     #endregion
 
-    #region JoinLobby_Functions:
-
-    private void Event_OnJoiningLobbyByCode()
-    {
-        LobbyEvents.OnJoiningLobbyByCode?.Invoke(joinLobbyCodeInputField.text);
-        Debug.Log("Joining lobby!");
-    }
-
-    private void Event_OnLeaveJoinLobbyUI()
-    {
-        LobbyEvents.OnLeaveJoinLobbyUI?.Invoke();
-    }
-
-    #endregion
 
 }
 

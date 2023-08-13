@@ -3196,7 +3196,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LOBBY CODE...
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4396,7 +4396,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   refreshLobbyTimer: 1.1
-  lobbyPollTimer: 1.1
 --- !u!114 &764710209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5551,9 +5550,6 @@ MonoBehaviour:
   - {fileID: 1622232141}
   - {fileID: 1901541689}
   mapListInt: 00000000010000000200000003000000
-  joinLobbyCodeInputField: {fileID: 706637785}
-  leaveJoinLobbyBtn: {fileID: 1113039228}
-  JoinLobbyByCodeBtn: {fileID: 557369698}
 --- !u!114 &934490762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5584,6 +5580,9 @@ MonoBehaviour:
   - {fileID: 606039657}
   - {fileID: 2080842159}
   - {fileID: 1305681102}
+  joinLobbyCodeInputField: {fileID: 706637785}
+  leaveJoinLobbyBtn: {fileID: 1113039228}
+  JoinLobbyByCodeBtn: {fileID: 557369698}
   lobbyListRefreshBtn: {fileID: 462661188}
   quickJoinLobbyBtn: {fileID: 822042128}
   isEnabled: 0
@@ -5689,7 +5688,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &996408037
 RectTransform:
   m_ObjectHideFlags: 0

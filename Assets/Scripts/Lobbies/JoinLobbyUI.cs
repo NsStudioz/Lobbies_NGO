@@ -10,21 +10,33 @@ using UnityEngine.UI;
 public class JoinLobbyUI : MonoBehaviour
 {
 
+    [Header("LobbyList Elements")]
     [SerializeField] private List<TMP_Text> lobbyNames = new List<TMP_Text>();   // Available public lobbies.
     [SerializeField] private List<TMP_Text> lobbyPlayers = new List<TMP_Text>(); // Available players in public lobby.
     [SerializeField] private List<Button> lobbyListButtons = new List<Button>();
 
+    // JoinLobby UI Elements:
+    [Header("InputField")]
+    [SerializeField] private TMP_InputField joinLobbyCodeInputField;
+
+    [Header("Buttons")]
+    [SerializeField] private Button leaveJoinLobbyBtn;
     [SerializeField] private Button lobbyListRefreshBtn;
+    [SerializeField] private Button JoinLobbyByCodeBtn;
     [SerializeField] private Button quickJoinLobbyBtn;
 
+    [Header("LobbyList Refresh Elements")]
     [SerializeField] private bool isEnabled;
     [SerializeField] private float lobbyListRefreshTimer = 10f;
+
 
 
     private void OnEnable()
     {
         lobbyListRefreshBtn.onClick.AddListener(Event_OnTriggerLobbyListRefresh);
         quickJoinLobbyBtn.onClick.AddListener(Event_OnQuickJoiningLobby);
+        leaveJoinLobbyBtn.onClick.AddListener(Event_OnLeaveJoinLobbyUI);
+        JoinLobbyByCodeBtn.onClick.AddListener(Event_OnJoiningLobbyByCode);
         InitializeLobbyListButtonArrayListeners();
 
         LobbyEvents.OnLobbyListChange += LobbyList_Refresh;
@@ -36,11 +48,24 @@ public class JoinLobbyUI : MonoBehaviour
     {
         lobbyListRefreshBtn.onClick.RemoveAllListeners();
         quickJoinLobbyBtn.onClick.RemoveAllListeners();
+        leaveJoinLobbyBtn.onClick.RemoveAllListeners();
+        JoinLobbyByCodeBtn.onClick.RemoveAllListeners();
         RemoveLobbyListButtonArrayListeners();
 
         LobbyEvents.OnLobbyListChange -= LobbyList_Refresh;
         MainMenuUI.OnJoinLobbyButtonClicked -= StartAutoRefreshLobbyList;
         LobbyEvents.OnLeaveJoinLobbyUI -= StopAutoRefreshLobbyList;
+    }
+
+    private void Event_OnJoiningLobbyByCode()
+    {
+        LobbyEvents.OnJoiningLobbyByCode?.Invoke(joinLobbyCodeInputField.text);
+        Debug.Log("Joining lobby!");
+    }
+
+    private void Event_OnLeaveJoinLobbyUI()
+    {
+        LobbyEvents.OnLeaveJoinLobbyUI?.Invoke();
     }
 
     private void InitializeLobbyListButtonArrayListeners()
