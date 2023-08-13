@@ -11,20 +11,19 @@ public class LobbyManagerUI : MonoBehaviour
 {
     public static LobbyManagerUI Instance;
 
-    // CreateLobby UI Elements:
-    [Header("CreateLobbyUI_Buttons")]
+    [Header("Buttons")]
     [SerializeField] private Button leaveLobbyBtn;
     [SerializeField] private Button lobbyPrivacyBtn;
     [SerializeField] private Button nextMapBtn;
     [SerializeField] private Button previousMapBtn;
     [SerializeField] private Button startBtn;
 
-    [Header("CreateLobbyUI_PlayerAvatar UI")]
+    [Header("Player Avatar UI")]
     [SerializeField] private GameObject playerAvatarPanel;
     [SerializeField] private Button[] avatarArrayBtn;
     [SerializeField] private Button chooseAvatar;
 
-    [Header("CreateLobbyUI_Texts")]
+    [Header("Texts")]
     [SerializeField] private TMP_Text lobbyPlayerCount;
     [SerializeField] private TMP_Text lobbyPrivacyText;
     [SerializeField] private TMP_Text lobbyCodeTextNumber;
@@ -32,17 +31,15 @@ public class LobbyManagerUI : MonoBehaviour
     [SerializeField] private TMP_Text mapNameText;
     [SerializeField] private Image mapImage;
 
-    private readonly string publicLobby = "PUBLIC";
-    private readonly string privateLobby = "PRIVATE";
-    private bool isPrivate = false;
-
-    [Header("CreateLobbyUI_Lists")]
+    [Header("Lists")]
     [SerializeField] private List<LobbyPlayerData> lobbyPlayerDatas = new List<LobbyPlayerData>();
     private List<Player> lobbyPlayers = new List<Player>();
     [SerializeField] private List<int> mapListInt = new List<int>();
+
+    private readonly string publicLobby = "PUBLIC";
+    private readonly string privateLobby = "PRIVATE";
+    private bool isPrivate = false;
     private int mapIndex = 0;
-
-
 
     private void Awake()
     {
@@ -51,54 +48,62 @@ public class LobbyManagerUI : MonoBehaviour
 
     private void Start()
     {
-        // Button Listeners:
-        leaveLobbyBtn.onClick.AddListener(Event_OnLeaveLobby);
-        lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
-        chooseAvatar.onClick.AddListener(OpenPlayerAvatarPanelUI);
-        startBtn.onClick.AddListener(Event_OnStartGame);
-        nextMapBtn.onClick.AddListener(Lobby_NextMap);
-        previousMapBtn.onClick.AddListener(Lobby_PreviousMap);
-
+        InitializeLobbyUIButtonListeners();
         // Events:
         LobbyEvents.OnLobbyCreated += Lobby_UpdateCodeNumberText;
         LobbyEvents.OnLobbyPrivacyStateUpdated += Lobby_UpdateLobbyPrivacyText;
         LobbyEvents.OnLobbyUpdated += Lobby_UpdateLobby;
         LobbyEvents.OnJoinedLobby += Lobby_DeactivateHostRelatedElementsOnClientSide;
-        LobbyEvents.OnChoosePlayerAvatar += OpenPlayerAvatarPanelUI;
+        LobbyEvents.OnChoosePlayerAvatar += Lobby_OpenPlayerAvatarPanelUI;
     }
 
-    private void OnEnable()
-    {
-        InitializeAvatarArrayButtonListeners();
-    }
+    private void OnEnable() => InitializeAvatarArrayButtonListeners();
+
 
     private void OnDisable()
     {
-        // Button Listeners:
+        RemoveLobbyUIButtonListeners();
+        RemoveAvatarArrayButtonListeners();
+        // Events:
+        LobbyEvents.OnLobbyCreated -= Lobby_UpdateCodeNumberText;
+        LobbyEvents.OnLobbyPrivacyStateUpdated -= Lobby_UpdateLobbyPrivacyText;
+        LobbyEvents.OnLobbyUpdated -= Lobby_UpdateLobby;
+        LobbyEvents.OnJoinedLobby -= Lobby_DeactivateHostRelatedElementsOnClientSide;
+        LobbyEvents.OnChoosePlayerAvatar -= Lobby_OpenPlayerAvatarPanelUI;
+    }
+
+    private void InitializeLobbyUIButtonListeners()
+    {
+        leaveLobbyBtn.onClick.AddListener(Event_OnLeaveLobby);
+        lobbyPrivacyBtn.onClick.AddListener(Event_OnLobbyPrivacyStateChange);
+        chooseAvatar.onClick.AddListener(Lobby_OpenPlayerAvatarPanelUI);
+        startBtn.onClick.AddListener(Event_OnStartGame);
+        nextMapBtn.onClick.AddListener(Lobby_NextMap);
+        previousMapBtn.onClick.AddListener(Lobby_PreviousMap);
+    }
+
+    private void RemoveLobbyUIButtonListeners()
+    {
         leaveLobbyBtn.onClick.RemoveAllListeners();
         lobbyPrivacyBtn.onClick.RemoveAllListeners();
         chooseAvatar.onClick.RemoveAllListeners();
         startBtn.onClick.RemoveAllListeners();
         nextMapBtn.onClick.RemoveAllListeners();
         previousMapBtn.onClick.RemoveAllListeners();
-        RemoveAvatarArrayButtonListeners();
-
-        // Events:
-        LobbyEvents.OnLobbyCreated -= Lobby_UpdateCodeNumberText;
-        LobbyEvents.OnLobbyPrivacyStateUpdated -= Lobby_UpdateLobbyPrivacyText;
-        LobbyEvents.OnLobbyUpdated -= Lobby_UpdateLobby;
-        LobbyEvents.OnJoinedLobby -= Lobby_DeactivateHostRelatedElementsOnClientSide;
-        LobbyEvents.OnChoosePlayerAvatar -= OpenPlayerAvatarPanelUI;
     }
 
     private void Lobby_UpdateLobby(Lobby lobby)
     {
+        // Texts:
         Lobby_UpdateLobbyPlayerCountText(lobby);
         Lobby_SyncPlayersNames(lobby);
-        Lobby_SyncPlayerKickButtons(lobby);
-        Lobby_DeactivateHostRelatedKickButtons(lobby);
+        // Kick Functions:
+        Lobby_SyncPlayerKickButtons(lobby); // Host's side
+        Lobby_DeactivateHostRelatedKickButtons(lobby); // Client's side
+        // PlayerAvatar:
         Lobby_ResetPlayerAvatars(lobby);
         Lobby_SyncPlayerAvatars(lobby);
+        // Map:
         Lobby_SetMapName(lobby);
         Lobby_SetMapImage(lobby);
     }
@@ -183,8 +188,8 @@ public class LobbyManagerUI : MonoBehaviour
 
             avatarArrayBtn[currentIndex].onClick.AddListener(() =>
             {
-                SetNewPlayerAvatar(currentIndex);
-                ClosePlayerAvatarPanelUI();
+                Lobby_SetNewPlayerAvatar(currentIndex);
+                Lobby_ClosePlayerAvatarPanelUI();
             });
         }
     }
@@ -195,7 +200,7 @@ public class LobbyManagerUI : MonoBehaviour
             avatarArrayBtn[i].onClick.RemoveAllListeners();
     }
 
-    private void SetNewPlayerAvatar(int index)
+    private void Lobby_SetNewPlayerAvatar(int index)
     {
         switch (index)
         {
@@ -231,12 +236,12 @@ public class LobbyManagerUI : MonoBehaviour
             lobbyPlayerDatas[i].UpdatePlayerAvatar(lobbyPlayers[i]);
     }
 
-    private void OpenPlayerAvatarPanelUI()
+    private void Lobby_OpenPlayerAvatarPanelUI()
     {
         playerAvatarPanel.SetActive(true);
     }
 
-    private void ClosePlayerAvatarPanelUI()
+    private void Lobby_ClosePlayerAvatarPanelUI()
     {
         playerAvatarPanel.SetActive(false);
     }
@@ -276,7 +281,6 @@ public class LobbyManagerUI : MonoBehaviour
         lobbyCodeTextNumber.text = lobbyCode;
     }
 
-
     // Player Names:
     private void Lobby_SyncPlayersNames(Lobby lobby)
     {
@@ -291,9 +295,6 @@ public class LobbyManagerUI : MonoBehaviour
 
         foreach (Player player in lobby.Players)
             lobbyPlayers.Add(player);
-
-/*        for (int i = 0; i < lobby.Players.Count; i++)
-            lobbyPlayers.Add(lobby.Players[i]);*/
     }
 
     private void Lobby_ClearPlayerNames(Lobby lobby) // NEEDS FIXING!
@@ -318,19 +319,19 @@ public class LobbyManagerUI : MonoBehaviour
         Lobby_ActivatePlayerKickButtons(lobby);
     }
 
-    private void Lobby_DeactivatePlayerKickButtons(Lobby lobby)
-    {
-        for (int i = 1; i < lobby.MaxPlayers; i++) // lobby.MaxPlayers => currently works, monitoring for possible errors
-            lobbyPlayerDatas[i].DeactivateKickButtons();
-    }
-
     private void Lobby_ActivatePlayerKickButtons(Lobby lobby)
     {
         for (int i = 1; i < lobby.Players.Count; i++)
             lobbyPlayerDatas[i].ActivateKickButtons();
     }
 
-    private void Lobby_DeactivateHostRelatedKickButtons(Lobby lobby)
+    private void Lobby_DeactivatePlayerKickButtons(Lobby lobby) // Host's side
+    {
+        for (int i = 1; i < lobby.MaxPlayers; i++) // lobby.MaxPlayers => currently works, monitoring for possible errors
+            lobbyPlayerDatas[i].DeactivateKickButtons();
+    }
+
+    private void Lobby_DeactivateHostRelatedKickButtons(Lobby lobby) // Client's side
     {
         if (LobbyManager.Instance.IsLobbyClient())
             for (int i = 1; i < lobby.MaxPlayers; i++) // lobby.MaxPlayers => currently works, monitoring for possible errors
