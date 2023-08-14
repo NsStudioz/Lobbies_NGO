@@ -35,8 +35,6 @@ public class LobbyManager : MonoBehaviour
 
     private List<Lobby> lobbyList;
 
-
-
     #region Lobby_Helpers:
 
     public Lobby GetCurrentLobby()
@@ -190,36 +188,21 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            if (!IsPlayerInLobby())
-            {
-                NotInAnyLobby();
-                Event_OnKickedFromLobby();
-            }
-            else
+            // Causing null error:
+            if (IsPlayerInLobby())
             {
                 Lobby newLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
                 currentLobby = newLobby;
                 LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
+            }
+            else
+            {
+                NotInAnyLobby();
+                Event_OnKickedFromLobby();
             }
 
             if (IsLobbyClient())
                 await StartGameClientOnLobbyUpdated();
-
-            // Causing null error:
-/*            if (IsPlayerInLobby())
-            {
-                Lobby newLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
-                currentLobby = newLobby;
-                LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
-            }
-            else
-            {
-                NotInAnyLobby();
-                Event_OnKickedFromLobby();
-            }
-
-            if (IsLobbyClient())
-                await StartGameClientOnLobbyUpdated();*/
 
         }
         catch (LobbyServiceException e)
@@ -354,7 +337,32 @@ public class LobbyManager : MonoBehaviour
 
         currentLobby = newLobby;
 
+        var joinLobbyCallbacks = new LobbyEventCallbacks();
+        joinLobbyCallbacks.KickedFromLobby += OnKickedFromLobby;
+
+        try
+        {
+            await Lobbies.Instance.SubscribeToLobbyEventsAsync(currentLobby.Id, joinLobbyCallbacks);
+        }
+        catch (LobbyServiceException ex)
+        {
+            switch (ex.Reason)
+            {
+                case LobbyExceptionReason.AlreadySubscribedToLobby: Debug.LogWarning($"Already subscribed to lobby[{currentLobby.Id}]. We did not need to try and subscribe again. Exception Message: {ex.Message}"); break;
+                case LobbyExceptionReason.SubscriptionToLobbyLostWhileBusy: Debug.LogError($"Subscription to lobby events was lost while it was busy trying to subscribe. Exception Message: {ex.Message}"); throw;
+                case LobbyExceptionReason.LobbyEventServiceConnectionError: Debug.LogError($"Failed to connect to lobby events. Exception Message: {ex.Message}"); throw;
+                default: throw;
+            }
+        }
+
         Event_OnJoinedLobby();
+    }
+
+    private void OnKickedFromLobby()
+    {
+        currentLobby = null;
+        Debug.Log("Is Lobby Null? = " + currentLobby);
+        Event_OnKickedFromLobby();
     }
 
     private async void TryCatch_QuickJoinLobby()
