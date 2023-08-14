@@ -25,6 +25,7 @@ public class MainMenuUI : MonoBehaviour
 
     private void OnEnable()
     {   
+        //Buttons:
         createLobbyButton.onClick.AddListener(() =>
         {
             ShowCreateLobbyPanel();
@@ -36,7 +37,7 @@ public class MainMenuUI : MonoBehaviour
             ShowJoinLobbyPanel();
             OnJoinLobbyButtonClicked?.Invoke();
         });
-        //
+        // Events:
         Login.OnLoginSuccess += ShowPlayerNameAsync;
         LobbyEvents.OnLeaveLobby += ShowMainMenuPanel;
         LobbyEvents.OnLeaveJoinLobbyUI += ShowMainMenuPanel;
@@ -47,9 +48,10 @@ public class MainMenuUI : MonoBehaviour
 
     private void OnDisable()
     {
+        //Buttons:
         createLobbyButton.onClick.RemoveAllListeners();
         joinLobbyButton.onClick.RemoveAllListeners();
-        //
+        // Events:
         Login.OnLoginSuccess -= ShowPlayerNameAsync;
         LobbyEvents.OnLeaveLobby -= ShowMainMenuPanel;
         LobbyEvents.OnLeaveJoinLobbyUI -= ShowMainMenuPanel;

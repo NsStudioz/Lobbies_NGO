@@ -145,8 +145,4 @@ public class JoinLobbyUI : MonoBehaviour
             yield return new WaitForSecondsRealtime(lobbyListRefreshTimer);
         }
     }
-
-
 }
-
-//private List<Lobby> lobbiesToQuery = new List<Lobby>(6); // Available public lobbies.

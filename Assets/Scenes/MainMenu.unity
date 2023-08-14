@@ -5582,8 +5582,8 @@ MonoBehaviour:
   - {fileID: 1305681102}
   joinLobbyCodeInputField: {fileID: 706637785}
   leaveJoinLobbyBtn: {fileID: 1113039228}
-  JoinLobbyByCodeBtn: {fileID: 557369698}
   lobbyListRefreshBtn: {fileID: 462661188}
+  JoinLobbyByCodeBtn: {fileID: 557369698}
   quickJoinLobbyBtn: {fileID: 822042128}
   isEnabled: 0
   lobbyListRefreshTimer: 10
@@ -5688,7 +5688,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &996408037
 RectTransform:
   m_ObjectHideFlags: 0
