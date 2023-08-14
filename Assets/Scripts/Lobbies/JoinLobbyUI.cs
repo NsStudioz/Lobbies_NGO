@@ -144,5 +144,5 @@ public class JoinLobbyUI : MonoBehaviour
             Debug.Log("Trigger lobby list refresh!");
             yield return new WaitForSecondsRealtime(lobbyListRefreshTimer);
         }
-    }
+    }   
 }
