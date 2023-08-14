@@ -15,8 +15,10 @@ public class LobbyRefreshTimer : MonoBehaviour
     private void StartTimerLoop(float deltaTime)
     {
         if (LobbyManager.Instance.GetCurrentLobby() == null)
+        {
+            lobbyPollTimer = lobbyPollTimerThreshold;
             return;
-
+        }
         else
         {
             lobbyPollTimer -= deltaTime;
