@@ -29,12 +29,3 @@ public class PlayerAvatar: MonoBehaviour
         }
     }
 }
-
-/*        return playerAvatar switch
-        {
-            LobbyManager.PlayerAvatarEnum.Diamond   => playerAvatarList[1],
-            LobbyManager.PlayerAvatarEnum.Gold      => playerAvatarList[2],
-            LobbyManager.PlayerAvatarEnum.Star      => playerAvatarList[3],
-            LobbyManager.PlayerAvatarEnum.Lightning => playerAvatarList[4],
-            _ => playerAvatarList[0], // default = Heart
-        };*/
