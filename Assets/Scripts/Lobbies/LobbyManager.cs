@@ -35,6 +35,8 @@ public class LobbyManager : MonoBehaviour
 
     private List<Lobby> lobbyList;
 
+
+
     #region Lobby_Helpers:
 
     public Lobby GetCurrentLobby()
@@ -188,7 +190,23 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            if (IsPlayerInLobby())
+            if (!IsPlayerInLobby())
+            {
+                NotInAnyLobby();
+                Event_OnKickedFromLobby();
+            }
+            else
+            {
+                Lobby newLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
+                currentLobby = newLobby;
+                LobbyEvents.OnLobbyUpdated?.Invoke(currentLobby);
+            }
+
+            if (IsLobbyClient())
+                await StartGameClientOnLobbyUpdated();
+
+            // Causing null error:
+/*            if (IsPlayerInLobby())
             {
                 Lobby newLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
                 currentLobby = newLobby;
@@ -201,7 +219,7 @@ public class LobbyManager : MonoBehaviour
             }
 
             if (IsLobbyClient())
-                await StartGameClientOnLobbyUpdated();
+                await StartGameClientOnLobbyUpdated();*/
 
         }
         catch (LobbyServiceException e)

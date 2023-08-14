@@ -4409,7 +4409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lobbyPollTimer: 0
-  lobbyPollTimerThreshold: 1.5
+  lobbyPollTimerThreshold: 3
 --- !u!114 &764710210
 MonoBehaviour:
   m_ObjectHideFlags: 0
